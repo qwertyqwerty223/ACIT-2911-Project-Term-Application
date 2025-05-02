@@ -1,51 +1,40 @@
 import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+
 import './App.css'
 import TimeLine from './components/timeLine/timeLine'
-
+import Header from './components/header/header'
+import Calender from './components/calender/calender'
+import Groups from './components/groups/groups'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
-      <div>
+      <Router>
         <div className="App">
           <h1>BCIT Project Term Assistant</h1>
-          {/* Navigation Bar */}
-          <nav className="NavBar">
-            <ul>
-              <li>Schedule</li>
-              <li>Tasks</li>
-              <li>Group</li>
-            </ul>
-          </nav>
+          <Header/>
+          <div>
+            <Routes>
+              <Route path="/" element={<TimeLine />} />
+              <Route path="/calender" element={<Calender />} />
+              <Route path="/groups" element={<Groups />} />
+
+            </Routes>
+          </div>
         </div>
-        <TimeLine />
-      </div>
+      </Router>
+      
     </>
   )
 }
+
+
 
 export default App

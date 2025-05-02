@@ -1,4 +1,4 @@
-[
+let activities = [
     {
         "id": "01",
         "title": "Sprint 1",
@@ -30,3 +30,5 @@
         "description": "Lecture for the agile project regarding sprint 3"
     }
 ]
+
+export default activities
