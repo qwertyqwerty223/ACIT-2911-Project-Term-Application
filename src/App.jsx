@@ -3,7 +3,7 @@ import { useState } from 'react'
 import './App.css'
 import TimeLine from './components/timeLine/timeLine'
 import Header from './components/header/header'
-import Calender from './components/calender/calender'
+import Kanban from './components/kanban/kanban'
 import Groups from './components/groups/groups'
 import {
   BrowserRouter as Router,
@@ -22,9 +22,8 @@ function App() {
           <div>
             <Routes>
               <Route path="/" element={<TimeLine />} />
-              <Route path="/calender" element={<Calender />} />
+              <Route path="/kanban" element={<Kanban />} />
               <Route path="/groups" element={<Groups />} />
-
             </Routes>
           </div>
         </div>

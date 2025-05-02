@@ -9,8 +9,8 @@ function Header() {
     const handleTimeLineClick = (e) => {
         navigate('/')
     }
-    const handleCalenderClick = (e) => {
-        navigate('/calender')
+    const handleKanbanClick = (e) => {
+        navigate('/kanban')
     }
     const handleGroupsClick = (e) => {
         navigate('/groups')
@@ -19,7 +19,7 @@ function Header() {
         <nav className="NavBar">
             <ul>
                 <li onClick={handleTimeLineClick}>Timeline</li>
-                <li onClick={handleCalenderClick}>Calender</li>
+                <li onClick={handleKanbanClick}>Kanban</li>
                 <li onClick={handleGroupsClick}>Groups</li>
             </ul>
         </nav>
