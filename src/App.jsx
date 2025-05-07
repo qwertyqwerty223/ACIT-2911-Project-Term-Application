@@ -41,6 +41,8 @@ function App() {
               <li>Group</li>
             </ul>
           </nav>
+          {/* Delete Button Placement */}
+          <button className="delete-button">Delete</button>
         </div>
         <TimeLine />
       </div>
