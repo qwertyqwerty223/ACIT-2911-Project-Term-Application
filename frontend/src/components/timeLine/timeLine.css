@@ -1,6 +1,48 @@
-.timeline{
-    padding: 20px;
-    width: 90%;
-    margin: auto;
-    background-color: bisque;
+.timeline {
+  padding: 20px;
+  width: 90%;
+  margin: auto;
+  background-color: bisque;
+}
+
+.add-event-button {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgb(33, 150, 243);
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.add-event-button:hover {
+  background-color: rgb(14, 86, 145);
+}
+
+.add-event-form {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-event-form input {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.add-event-form button {
+  padding: 10px;
+  margin-left: 50px;
+  margin-right: 50px;
+  font-size: 14px;
+  background-color: rgb(33, 150, 243);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.add-event-form button:hover {
+  background-color: rgb(14, 86, 145);
 }
