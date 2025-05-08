@@ -1,3 +1,4 @@
+const { request } = require("express")
 const mongoose = require("mongoose")
 
 const TaskSchema = new mongoose.Schema({
@@ -7,11 +8,13 @@ const TaskSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        enum: ['planned', 'in-progress', 'completed'],
         required: true
     },
-    User: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User',
+    user: { 
+        type: [ String ], 
+        required: false,
+        default: []
     }
 })
 

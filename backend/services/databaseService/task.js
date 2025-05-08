@@ -6,7 +6,7 @@ const retrieveAllTasksFromDB = async () => {
         if (!tasks) throw new Error("No documents found")
         return tasks
     } catch (error) {
-        return error.errors.message
+        throw new Error(error.message)
     }
 }
 
@@ -18,7 +18,7 @@ const retrieveOneTaskFromDB = async (req) => {
         if (!task) throw new Error("No document with that id found")
         return task
     } catch (error) {
-        return error.errors.message
+        throw new Error(error.message)
     }
 }
 
@@ -26,9 +26,20 @@ const saveTaskToDB = async (req) => {
     try {
         const newTask = new Task(req.body)
         await newTask.save()
-        return "User created successfully "
+        return "Task created successfully "
     } catch (error) {
-        return error.errors.message
+        throw new Error(error.message)
+    }
+}
+
+const updateTaskToDB = async (req) => {
+    try {
+        const { id } = req.params
+        const updatedTask = await Event.findByIdAndUpdate(id, req.body)
+        console.log(updatedTask)
+        return "Task updated successfully"
+    } catch (error) {
+        throw new Error(error.message)
     }
 }
 
@@ -38,9 +49,9 @@ const DeleteOneTaskFromDB = async (req) => {
         await Task.findByIdAndDelete(id);
         return "Event deleted successfully"
     } catch (error) {
-        return error.errors.message
+        throw new Error(error.message)
     }
 }
 
 
-module.exports = { retrieveAllTasksFromDB, retrieveOneTaskFromDB, saveTaskToDB, DeleteOneTaskFromDB }
+module.exports = { retrieveAllTasksFromDB, retrieveOneTaskFromDB, saveTaskToDB, updateTaskToDB, DeleteOneTaskFromDB }

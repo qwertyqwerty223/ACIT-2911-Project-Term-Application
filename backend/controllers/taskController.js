@@ -1,12 +1,12 @@
-const { retrieveAllTasksFromDB, retrieveOneTaskFromDB, saveTaskToDB, DeleteOneTaskFromDB } = require('../services/databaseService/task')
+const { retrieveAllTasksFromDB, retrieveOneTaskFromDB, saveTaskToDB, updateTaskToDB, DeleteOneTaskFromDB } = require('../services/databaseService/task')
 
 const getAllTasks = async (req, res) => {
     try {
         const tasks = await retrieveAllTasksFromDB()
         return res.json(tasks)
     } catch (error) {
-        console.error(error.errors.message)
-        return res.json({"message":error.errors.message})
+        console.error(error)
+        return res.json({"message": error})
     }
 }
 
@@ -16,8 +16,8 @@ const getTaskById = async (req, res) => {
         const task = await retrieveOneTaskFromDB(req)
         return res.json(task)
     } catch (error) {
-        console.error(error.errors.message)
-        return res.json({"message" : error.errors.message})
+        console.error(error)
+        return res.json({"message": error})
     }
 }
 
@@ -27,19 +27,29 @@ const postOneTask = async (req, res) => {
         const savedTask = await saveTaskToDB(req)
         return res.json({"message": savedTask})
     } catch (error) {
-        console.error(error.errors.message)
-        return res.json({"message": error.errors.message})
+        console.error(error)
+        return res.json({"message": error})
     }   
+}
+
+const updateOneTask = async (req, res) => {
+    try {
+        const updatedTask = await updateTaskToDB(req)
+        return res.json({ "message": updatedTask})
+    } catch (error) {
+        console.error(error)
+        return res.json({"message": error})
+    }
 }
 
 const deleteOneTask = async (req, res) => {
     try {
-        const deletedTask = await DeleteOneEventFromDB(req)
+        const deletedTask = await DeleteOneTaskFromDB(req)
         return res.json({"message": deletedTask})
     } catch (error) {
-        console.error(error.errors.message)
-        return res.json({"message": error.errors.message})
+        console.error(error)
+        return res.json({"message": error})
     }
 }
 
-module.exports = { getAllTasks, getTaskById, postOneTask, deleteOneTask }
+module.exports = { getAllTasks, getTaskById, postOneTask, updateOneTask, deleteOneTask }
