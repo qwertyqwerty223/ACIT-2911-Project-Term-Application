@@ -4,17 +4,45 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import "./timeLine.css";
-import activities from "../../data/sample";
-import { useState } from "react";
+// import activities from "../../data/sample";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+
+const formatEvents = (sourceEventData) => {
+  const formattedData = sourceEventData.events.map((event) => ({
+    id: event._id,
+    title: event.title,
+    description: event.description,
+    date: new Date(event.date).toLocaleDateString("en-US"),
+  }));
+
+  return formattedData;
+};
+
+const fetchEvents = async (setTimelineEvent) => {
+  try {
+    // update your server endpoint, if different from localhost:3000
+    const res = await axios.get(fetchAllFromEndPoint("events"));
+    const updatedEventData = formatEvents(res.data);
+    setTimelineEvent(updatedEventData);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+};
 
 function TimeLine() {
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [timelineEvents, setTimelineEvent] = useState(activities);
+  const [timelineEvents, setTimelineEvent] = useState([]);
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
     date: "",
   });
+
+  useEffect(() => {
+    fetchEvents(setTimelineEvent);
+  }, []);
 
   const handleInputChange = (event) => {
     const inputName = event.target.name;
@@ -25,63 +53,72 @@ function TimeLine() {
     });
   };
 
-  const AddNewEvent = (event) => {
+  const AddNewEvent = async (event) => {
     event.preventDefault();
 
     const newTimelineEvent = {
-        id: timelineEvents.length + 1,
-        title: newEvent.title,
-        description: newEvent.description,
-        date: newEvent.date,
+      title: newEvent.title,
+      description: newEvent.description,
+      date: newEvent.date,
     };
 
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
-    setTimelineEvent([...timelineEvents, newTimelineEvent]);
+    try {
+      await axios.post(fetchAllFromEndPoint("events/create-event"), newTimelineEvent);
+      await fetchEvents(setTimelineEvent);
+    } catch (error) {
+      console.error("Error adding event:", error);
+    }
 
     setNewEvent({
-        title: "",
-        description: "",
-        date: "",
-    })
+      title: "",
+      description: "",
+      date: "",
+    });
 
     setIsFormVisible(false);
-  }
-
+  };
 
   return (
     <div className="timeline">
-      <button onClick={() => setIsFormVisible(!isFormVisible)} className="add-event-button">
+      <button
+        onClick={() => setIsFormVisible(!isFormVisible)}
+        className="add-event-button"
+      >
         {isFormVisible ? "Cancel" : "Add Timeline Event"}
       </button>
 
       {isFormVisible && (
         <form onSubmit={AddNewEvent} className="add-event-form">
-          <input 
-          type="text" 
-          name="title" 
-          placeholder="Event Title" 
-          onChange={handleInputChange}
-          required/>
+          <input
+            type="text"
+            name="title"
+            placeholder="Event Title"
+            onChange={handleInputChange}
+            required
+          />
 
-          <input 
-          type="text" 
-          name="description" 
-          placeholder="Write a description for the event" 
-          value={newEvent.description}
-          onChange={handleInputChange}
-          required/>
+          <input
+            type="text"
+            name="description"
+            placeholder="Write a description for the event"
+            value={newEvent.description}
+            onChange={handleInputChange}
+            required
+          />
 
-          <input 
-          type="date" 
-          name="date"
-          value={newEvent.date}
-          onChange={handleInputChange}
-          required/>
+          <input
+            type="date"
+            name="date"
+            value={newEvent.date}
+            onChange={handleInputChange}
+            required
+          />
           <button type="submit">Save Event</button>
         </form>
       )}
       <VerticalTimeline>
-        {activities.map((a) => (
+        {timelineEvents.map((a) => (
           <VerticalTimelineElement
             className="vertical-timeline-element--work"
             contentStyle={{ background: "#fff", color: "#000" }}
