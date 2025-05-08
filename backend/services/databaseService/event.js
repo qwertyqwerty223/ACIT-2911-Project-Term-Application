@@ -3,7 +3,6 @@ const { Event } = require("../../models/eventModel")
 const retrieveAllEventsFromDB = async () => {
     try {
         const events = await Event.find()
-        if (!events) throw new Error("No documents found ")
         return events
     } catch (error) {
         throw new Error(error.message)
@@ -14,7 +13,6 @@ const retrieveOneEventFromDB = async (req) => {
     try {
         const {id} = req.params
         const event = await Event.findById(id)
-        if (!event) throw new Error("No document found with that Id")
         return event
     } catch (error) {
         throw new Error(error.message)
@@ -42,7 +40,7 @@ const updateEventToDB = async (req) => {
         return "Event updated successfully"
     } catch (error) {
         // console.log(error)
-        throw new Error(error.message || "No document with provided Id")
+        throw new Error(error.message)
     }
 }
 

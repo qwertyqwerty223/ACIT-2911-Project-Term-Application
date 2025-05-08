@@ -6,7 +6,7 @@ const getAllTasks = async (req, res) => {
         return res.json(tasks)
     } catch (error) {
         console.error(error)
-        return res.json({"message": error})
+        return res.status(500).json({"message": error.message})
     }
 }
 
@@ -25,20 +25,20 @@ const postOneTask = async (req, res) => {
     try {
          // Pass the req object to the retrieveOneUserFromDB, so we can access the user id via req.params.id
         const savedTask = await saveTaskToDB(req)
-        return res.json({"message": savedTask})
+        return res.status(201).json({"message": savedTask})
     } catch (error) {
         console.error(error)
-        return res.json({"message": error})
+        return res.status(500).json({"message": error})
     }   
 }
 
 const updateOneTask = async (req, res) => {
     try {
         const updatedTask = await updateTaskToDB(req)
-        return res.json({ "message": updatedTask})
+        return res.status(200).json({ "message": updatedTask})
     } catch (error) {
         console.error(error)
-        return res.json({"message": error})
+        return res.status(500).json({"message": error})
     }
 }
 
