@@ -1,7 +1,86 @@
 // import { fetchAllFromEndPoint } from "../../helpers/fetchData"
 import React, { useState, useEffect } from "react";
+import deleteIcon from "../../assets/delete-icon.svg";
 import axios from "axios";
 import "./kanban.css";
+import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+
+function AddTaskCard({ status, onTaskAdded }) {
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [newTask, setNewTask] = useState({
+    description: "",
+    user: "",
+    status: "planned", // default value
+  });
+
+  const handleInputChange = (event) => {
+    const inputName = event.target.name;
+    const inputValue = event.target.value;
+    setNewTask({
+      ...newTask,
+      [inputName]: inputValue,
+    });
+  };
+
+  const addNewTask = async (event) => {
+    event.preventDefault();
+    const taskToSend = {
+      description: newTask.description,
+      status: newTask.status,
+      user: newTask.user ? [newTask.user] : [],
+    };
+
+    try {
+      await axios.post(fetchAllFromEndPoint("tasks/create-task"), taskToSend);
+      if (onTaskAdded) onTaskAdded();
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
+    setNewTask({ description: "", user: "", status: "planned" });
+    setIsFormVisible(false);
+  };
+
+  return (
+    <div className="add-task-card">
+      <button
+        onClick={() => setIsFormVisible(!isFormVisible)}
+        className="add-task-button"
+      >
+        {isFormVisible ? "Cancel" : "Add Task"}
+      </button>
+      {isFormVisible && (
+        <form onSubmit={addNewTask} className="add-task-form">
+          <input
+            type="text"
+            name="description"
+            placeholder="Task Description"
+            value={newTask.description}
+            onChange={handleInputChange}
+            required
+          />
+          <input
+            type="text"
+            name="user"
+            placeholder="Assigner user"
+            value={newTask.user}
+            onChange={handleInputChange}
+          />
+          <select
+            name="status"
+            value={newTask.status}
+            onChange={handleInputChange}
+            required
+          >
+            <option value="planned">Planned</option>
+            <option value="in-progress">In-Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+          <button type="submit">Save Task</button>
+        </form>
+      )}
+    </div>
+  );
+}
 
 const initialData = {
   lanes: [
@@ -51,7 +130,7 @@ const fetchTasks = async (setData) => {
     // update your server endpoint, if different from localhost:3000
     const res = await axios.get("http://localhost:3000/tasks");
     const updatedBoardData = mapTasksToLanes(res.data);
-    console.log(res.data);
+    // console.log(res.data);
     setData(updatedBoardData);
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -79,6 +158,16 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
     });
   } catch (error) {
     console.error("Error Sending tasks:", error);
+  }
+};
+
+const deleteTask = async (cardID, onTaskDeleted) => {
+  try {
+    // Use the correct endpoint for deletion
+    await axios.delete(`http://localhost:3000/tasks/${cardID}`);
+    if (onTaskDeleted) onTaskDeleted();
+  } catch (error) {
+    console.error("Error deleting task:", error);
   }
 };
 
@@ -132,6 +221,7 @@ function Kanban() {
 
   return (
     <div className="kanban-board">
+      <AddTaskCard onTaskAdded={() => fetchTasks(setData)} />
       {data.lanes.map((lane) => (
         <div
           key={lane.id}
@@ -151,6 +241,16 @@ function Kanban() {
                 <h4 className="card-title">{card.title}</h4>
                 <p className="card-description">{card.description}</p>
                 <p className="card-description">{card.user}</p>
+                <button
+                  className="delete-task-button"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent drag or other parent events
+                    deleteTask(card.id, () => fetchTasks(setData));
+                  }}
+                  title="Delete Task"
+                >
+                  <img src={deleteIcon} alt="Delete Icon" />
+                </button>
               </div>
             ))}
           </div>
