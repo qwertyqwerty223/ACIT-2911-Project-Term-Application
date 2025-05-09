@@ -238,7 +238,7 @@ function Kanban() {
                 draggable
                 onDragStart={(e) => handleDragStart(e, card, lane.id)}
               >
-                <h4 className="card-title">{card.title}</h4>
+                {/* <h4 className="card-title">{card.title}</h4> */}
                 <p className="card-description">{card.description}</p>
                 <p className="card-description">{card.user}</p>
                 <button

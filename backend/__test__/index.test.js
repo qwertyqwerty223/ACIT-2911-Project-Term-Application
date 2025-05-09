@@ -88,7 +88,7 @@ describe('create new event', () => {
 })
 
 describe('get one existing event', () => {
-    test('returns status code 200 if a the requested event is retrieved', async () => {
+    test('returns status code 200 if the requested event is retrieved', async () => {
 
         const newEvent = await request(app).post('/events/create-event').send({
             "title": "Lorem ipsum",
@@ -120,8 +120,8 @@ describe('update existing event', () => {
     });
 });
 
-describe('delete existing task', () => {
-    test('returns status code 200 if a task was deleted', async () => {
+describe('delete existing event', () => {
+    test('returns status code 200 if a event was deleted', async () => {
 
         const newEvent = await request(app).post('/events/create-event').send({
             "title": "Lorem ipsum",

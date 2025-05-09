@@ -32,7 +32,7 @@ const postOneEvent = async (req, res) => {
         return res.json({"message": error.message})
     }   
 }
-
+   
 const updateOneEvent = async (req, res) => {
     try {
         const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body)
