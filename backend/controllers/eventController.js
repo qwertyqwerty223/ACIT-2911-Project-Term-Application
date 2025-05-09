@@ -1,55 +1,55 @@
-const { retrieveAllEventsFromDB, retrieveOneEventFromDB, saveEventToDB, updateEventToDB ,DeleteOneEventFromDB } = require("../services/databaseService/event")
+const { Event } = require("../models/eventModel")
 
 const getAllEvents = async (req, res) => {
     // Call retrieveAllEventsFromDB to get all events from the db
     try {
-        const events = await retrieveAllEventsFromDB()
-        return res.json({events})
+        const events = await Event.find()
+        return res.status(200).json({events})
     } catch (error) {
-        console.error(error)
+        console.error(error.message)
         return res.status(500).json({"message": error.message})
     }
 }
 
 const getEventById = async (req, res) => {
     try {
-        // call retrieveOneEventFromDB to get event by id
-        const event = await retrieveOneEventFromDB(req)
-        return res.json(event)
+        const {id} = req.params
+        const event = await Event.findById(id)
+        return res.status(200).json(event)
     } catch (error) {
-        console.error(error)
-        return res.json({"message": error})
+        console.error(error.message)
+        return res.status(500).json({"message": error.message})
     }
 }
 
 const postOneEvent = async (req, res) => {
     try {
-        // Get req body and parse to saveEventToDB
-        const savedEvent = await saveEventToDB(req)
-        return res.json({"message": savedEvent})
+        const newEvent = new Event(req.body)
+        const event = await newEvent.save()
+        return res.status(201).json(event)
     } catch (error) {
-        console.error(error)
-        return res.json({"message": error})
+        console.error(error.message)
+        return res.json({"message": error.message})
     }   
 }
 
 const updateOneEvent = async (req, res) => {
     try {
-        const updatedEvent = await updateEventToDB(req)
-        return res.json({ "message": updatedEvent})
+        const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body)
+        return res.json({ "message": "Event updated successfully"})
     } catch (error) {
-        console.error(error)
-        return res.json({"message": error})
+        console.error(error.message)
+        return res.json({"message": error.message})
     }
 }
 
 const deleteOneEvent = async (req, res) => {
     try {
-        const deletedEvent = await DeleteOneEventFromDB(req)
-        return res.json({"message": deletedEvent})
+        await Event.findByIdAndDelete(req.params.id);
+        return res.json({"message": "Event deleted successfully"})
     } catch (error) {
-        console.error(error)
-        return res.json({"message": error})
+        console.error(error.message)
+        return res.json({"message": error.message})
     }
 }
 
