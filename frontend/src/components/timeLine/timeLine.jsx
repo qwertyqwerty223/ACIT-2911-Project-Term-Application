@@ -8,6 +8,7 @@ import "./timeLine.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+import deleteIcon from "../../assets/delete-icon.svg";
 
 const formatEvents = (sourceEventData) => {
   const formattedData = sourceEventData.events.map((event) => ({
@@ -28,6 +29,15 @@ const fetchEvents = async (setTimelineEvent) => {
     setTimelineEvent(updatedEventData);
   } catch (error) {
     console.error("Error fetching events:", error);
+  }
+};
+
+const deleteEvent = async (eventID, atEventDeleted) => {
+  try {
+    await axios.delete(fetchAllFromEndPoint(`events/${eventID}`));
+    atEventDeleted();
+  } catch (error) {
+    console.error("Error Deleting event:", error);
   }
 };
 
@@ -64,7 +74,10 @@ function TimeLine() {
 
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
-      await axios.post(fetchAllFromEndPoint("events/create-event"), newTimelineEvent);
+      await axios.post(
+        fetchAllFromEndPoint("events/create-event"),
+        newTimelineEvent
+      );
       await fetchEvents(setTimelineEvent);
     } catch (error) {
       console.error("Error adding event:", error);
@@ -129,6 +142,15 @@ function TimeLine() {
           >
             <h3 className="vertical-timeline-element-title">{a.title}</h3>
             <p>{a.description}</p>
+            <button
+              className="delete-event-button"
+              onClick={() => {
+                deleteEvent(a.id, () => fetchEvents(setTimelineEvent));
+              }}
+              title="Delete Task"
+            >
+              <img src={deleteIcon} alt="Delete Icon" />
+            </button>
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>
