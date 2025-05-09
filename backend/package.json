@@ -8,6 +8,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "mongodb-memory-server": "^10.1.4",
+    "nodemon": "^3.1.10",
     "supertest": "^7.1.0"
   },
   "scripts": {
@@ -15,7 +16,8 @@
     "dev": "nodemon server.js"
   },
   "jest": {
-  "setupFilesAfterEnv": ["<rootDir>/__test__/setup.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/__test__/setup.js"
+    ]
   }
-
 }
