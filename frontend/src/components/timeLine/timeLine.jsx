@@ -26,6 +26,7 @@ const fetchEvents = async (setTimelineEvent) => {
     // update your server endpoint, if different from localhost:3000
     const res = await axios.get(fetchAllFromEndPoint("events"));
     const updatedEventData = formatEvents(res.data);
+    console.log(res.data);
     setTimelineEvent(updatedEventData);
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -158,4 +159,4 @@ function TimeLine() {
   );
 }
 
-export default TimeLine;
+export { fetchEvents, deleteEvent, TimeLine };

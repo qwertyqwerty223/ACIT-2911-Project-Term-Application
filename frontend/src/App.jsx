@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import "./App.css";
-import TimeLine from "./components/timeLine/timeLine";
+import { TimeLine } from "./components/timeLine/timeLine";
 import Header from "./components/header/header";
-import Kanban from "./components/kanban/kanban";
+import { Kanban } from "./components/kanban/kanban";
 import Groups from "./components/groups/groups";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
