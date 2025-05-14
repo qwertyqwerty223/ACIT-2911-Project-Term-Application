@@ -1,10 +1,9 @@
 import { useState } from "react";
 
 import "./App.css";
-import { TimeLine } from "./components/timeLine/timeLine";
+import TimeLine from "./pages/timeLine/timeLine";
 import Header from "./components/header/header";
-import { Kanban } from "./components/kanban/kanban";
-import Groups from "./components/groups/groups";
+import Kanban from "./pages/kanban/kanban";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
             <Routes>
               <Route path="/" element={<TimeLine />} />
               <Route path="/kanban" element={<Kanban />} />
-              <Route path="/groups" element={<Groups />} />
             </Routes>
           </div>
         </div>

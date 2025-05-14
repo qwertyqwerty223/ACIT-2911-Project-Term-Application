@@ -36,6 +36,8 @@ const fetchEvents = async (setTimelineEvent) => {
   try {
     // update your server endpoint, if different from localhost:3000
     const res = await axios.get(fetchAllFromEndPoint("events"));
+    // Check if res.data exists
+    // If res.data does not exist, it will return undefined . Which we do not want
     const updatedEventData = formatEvents(res.data);
     console.log(res.data);
     setTimelineEvent(updatedEventData);

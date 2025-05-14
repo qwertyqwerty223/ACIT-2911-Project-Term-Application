@@ -12,15 +12,11 @@ function Header() {
     const handleKanbanClick = (e) => {
         navigate('/kanban')
     }
-    const handleGroupsClick = (e) => {
-        navigate('/groups')
-    }
     return (
         <nav className="NavBar">
             <ul>
                 <li onClick={handleTimeLineClick}>Timeline</li>
                 <li onClick={handleKanbanClick}>Kanban</li>
-                <li onClick={handleGroupsClick}>Groups</li>
             </ul>
         </nav>
     )
