@@ -260,4 +260,4 @@ function Kanban() {
   );
 }
 
-export { fetchTasks, deleteTask, Kanban, mapTasksToLanes, updateStatusOnCardDrag, AddTaskCard };
+export default Kanban;
