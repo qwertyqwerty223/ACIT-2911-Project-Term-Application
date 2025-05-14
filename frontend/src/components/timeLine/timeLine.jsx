@@ -9,15 +9,26 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchAllFromEndPoint } from "../../helpers/fetchData";
 import deleteIcon from "../../assets/delete-icon.svg";
+import React from "react";
 
 const formatEvents = (sourceEventData) => {
-  const formattedData = sourceEventData.events.map((event) => ({
-    id: event._id,
-    title: event.title,
-    description: event.description,
-    date: new Date(event.date).toLocaleDateString("en-US"),
-  }));
+  const formattedData = sourceEventData.events
+    .filter(
+      (event) => event._id && event.title && event.description && event.date
+    )
+    .map((event) => ({
+      id: event._id,
+      title: event.title,
+      description: event.description,
+      date:
+        new Date(event.date).toString() === "Invalid Date"
+          ? "Invalid Date"
+          : new Date(event.date).toLocaleDateString("en-US", {
+              timeZone: "UTC",
+            }),
+    }));
 
+  console.log("Formatted Event Data:", formattedData);
   return formattedData;
 };
 
@@ -159,4 +170,4 @@ function TimeLine() {
   );
 }
 
-export { fetchEvents, deleteEvent, TimeLine };
+export { fetchEvents, deleteEvent, };

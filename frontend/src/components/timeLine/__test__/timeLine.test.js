@@ -1,20 +1,28 @@
 import { fetchEvents, deleteEvent } from "../timeLine"; // Adjust path if needed
 import axios from "axios"; // Axios import
-import { waitFor } from "@testing-library/react"; // React testing utilities
+import { fireEvent, waitFor, render, screen } from "@testing-library/react"; // React testing utilities
+import React from "react";
 
-// Mock axios
+// Mock axios functions
+// allows me to make mocks for axios.get, axios.delete, etc.
+// i.e. lets me define what axios.* should return or do during the test
 jest.mock("axios");
+
+// defining the image asset mock to resolve error
 jest.mock("../../../assets/delete-icon.svg", () => "delete-icon.svg");
 
-// Mock fetchEvents
-jest.mock("../timeLine", () => ({
-  ...jest.requireActual("../timeLine"), // Import actual functions except fetchEvents
-  fetchEvents: jest.fn(), // Mock fetchEvents function
-}));
-
+// Define a test block - a group of tests
+// Test block for Handling events
 describe("HandleEvents", () => {
+  // runs before each test in this "describe" test block
+  beforeEach(() => {
+    // clears any previous usage data from the mock function axios.get
+    axios.get.mockClear();
+  });
+
+  // TEST CASE #1: for successful data fetching
   it("should fetch events and update data correctly", async () => {
-    // Mocking axios GET request
+    // defines the shape of the data axios.get is suppose to return from the API
     const mockData = {
       data: {
         events: [
@@ -34,15 +42,17 @@ describe("HandleEvents", () => {
       },
     };
 
+    // returns a promise that resolves with the mock data mentioned above
     axios.get.mockResolvedValue(mockData);
 
-    const setTimelineEvent = jest.fn(); // Mocking the setData function to verify the update
+    // mock function for simulating the state setter
+    const setTimelineEvent = jest.fn();
 
-    // Calling fetchTasks
+    // call fetchEvents with the state setter mock
     await fetchEvents(setTimelineEvent);
 
-    // Check if setData was called with the correct updated data
-    expect(fetchEvents).toHaveBeenCalledWith([
+    // verify that setTimelineEvent is called with the correct data
+    expect(setTimelineEvent).toHaveBeenCalledWith([
       {
         id: "681d6627b4675a6ae1708069",
         title: "This is a new event",
@@ -58,53 +68,82 @@ describe("HandleEvents", () => {
     ]);
   });
 
+  // TEST CASE #2: for handling fetch errors
   it("should handle error when fetching events fails", async () => {
-    // Mocking axios GET request to simulate error
+    // axios.get mock to reject with an error
     axios.get.mockRejectedValue(new Error("Failed to fetch events"));
 
+    // mock for state setter
     const setTimelineEvent = jest.fn();
 
-    // Calling fetchEvents
+    // call fetchEvents with state setter
     await fetchEvents(setTimelineEvent);
 
-    // Verifying that setTimelineEvent is not called when the API call fails
+    // Verify that state setter was not called upon error
     await waitFor(() => expect(setTimelineEvent).not.toHaveBeenCalled());
+  });
+
+  // TEST CASE #3: handling empty response
+  it("should handle empty events response", async () => {
+    axios.get.mockResolvedValue({ data: { events: [] } });
+    const setTimelineEvent = jest.fn();
+    await fetchEvents(setTimelineEvent);
+    expect(setTimelineEvent).toHaveBeenCalledWith([]);
+  });
+
+  // TEST CASE #4: handing incorrect data
+  it("should handle incorrect event data", async () => {
+    axios.get.mockResolvedValue({ data: { events: [{ notAKey: "badData" }] } });
+    const setTimelineEvent = jest.fn();
+    await fetchEvents(setTimelineEvent);
+    expect(setTimelineEvent).toHaveBeenCalledWith([]);
   });
 });
 
+// Test block for deleting Events (success + failure)
 describe("deleteEvents", () => {
+  // TEST CASE #5: successful event deletion
   it("should delete Event successfully", async () => {
-    // STEP 1: mock the axios DELETE request
+    // Mock axios.delete to resolve successfully
     axios.delete.mockResolvedValue({});
 
-    // STEP 2: mock the callback function 'onEventDeleted'
+    // mock function for deletion callback
     const onEventDeleted = jest.fn();
 
-    // STEP 3: call the deleteTask for success scenario
+    // call deleteEvent with sample ID and callback mock
     await deleteEvent("1", onEventDeleted);
 
-    // STEP 4: test for if the correct API URL is being called
+    // verify that axios.delete was called with the correct URL
     expect(axios.delete).toHaveBeenCalledWith("http://localhost:3000/events/1");
 
-    // STEP 5: verify that the onTaskDeleted was called
+    // verify that the callback was called exactly once
     expect(onEventDeleted).toHaveBeenCalledTimes(1);
   });
 
-  // STEP 6: Test case for deletion failure
+  // TEST CASE #6: handling deletion errors
   it("Should handle error if deletion fails", async () => {
-    // STEP 7: mock the axios.delete for failure
+    // create axios.delete mock for rejecting with an error
     axios.delete.mockRejectedValue(new Error("failed to delete event"));
 
-    // STEP 8: mock the callback function 'onEventDeleted'
+    // callback mock
     const onEventDeleted = jest.fn();
 
-    // STEP 9: call the deleteTask method for failure scenario
+    // call deleteEvent with sample ID and callback mock
     await deleteEvent("1", onEventDeleted);
 
-    // STEP 10: test for correct API URL calling
+    // Verify that axios.delete was attempted with the correct URL
     expect(axios.delete).toHaveBeenCalledWith("http://localhost:3000/events/1");
 
-    // STEP 11: verify that the onEventDeleted in NOT called upon error
+    // Verify that callback was not called upon error
+    expect(onEventDeleted).not.toHaveBeenCalled();
+  });
+
+  // TEST CASE #7: handling invalid id for deletion
+  it("should handle invalid event ID during deletion", async () => {
+    axios.delete.mockRejectedValue(new Error("Event not found"));
+    const onEventDeleted = jest.fn();
+    await deleteEvent("999", onEventDeleted);
     expect(onEventDeleted).not.toHaveBeenCalled();
   });
 });
+
