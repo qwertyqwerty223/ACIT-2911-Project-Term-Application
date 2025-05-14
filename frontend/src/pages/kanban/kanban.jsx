@@ -4,13 +4,16 @@ import deleteIcon from "../../assets/delete-icon.svg";
 import axios from "axios";
 import "./kanban.css";
 import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+import { useLocation  } from "react-router-dom";
 
-function AddTaskCard({ status, onTaskAdded }) {
+function AddTaskCard({ status, onTaskAdded}) {
+
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [newTask, setNewTask] = useState({
     description: "",
     user: "",
     status: "planned", // default value
+    tokenId: ""
   });
 
   const handleInputChange = (event) => {
@@ -22,21 +25,27 @@ function AddTaskCard({ status, onTaskAdded }) {
     });
   };
 
+  if(!location) return
+  
+  const taskToSend = {
+    description: newTask.description,
+    status: newTask.status,
+    user: newTask.user ? [newTask.user] : [],
+    tokenId: window.location.pathname.split('/')[3]
+  };
+
   const addNewTask = async (event) => {
     event.preventDefault();
-    const taskToSend = {
-      description: newTask.description,
-      status: newTask.status,
-      user: newTask.user ? [newTask.user] : [],
-    };
-
+  
     try {
-      await axios.post(fetchAllFromEndPoint("tasks/create-task"), taskToSend);
+      await axios.post(fetchAllFromEndPoint("tasks/create-task"), taskToSend, {
+        withCredentials: true
+      });
       if (onTaskAdded) onTaskAdded();
     } catch (error) {
       console.error("Error adding task:", error);
     }
-    setNewTask({ description: "", user: "", status: "planned" });
+    setNewTask({ description: "", user: "", status: "planned", tokenId: "" });
     setIsFormVisible(false);
   };
 
@@ -127,8 +136,9 @@ const mapTasksToLanes = (tasksFromServer) => {
 
 const fetchTasks = async (setData) => {
   try {
+    const tokenId = window.location.pathname.split('/')[3]
     // update your server endpoint, if different from localhost:3000
-    const res = await axios.get("http://localhost:3000/tasks");
+    const res = await axios.get(`http://localhost:3000/tasks/${tokenId}`);
     const updatedBoardData = mapTasksToLanes(res.data);
     // console.log(res.data);
     setData(updatedBoardData);
@@ -174,8 +184,10 @@ const deleteTask = async (cardID, onTaskDeleted) => {
 function Kanban() {
   const [data, setData] = useState(initialData);
 
+  const location = useLocation()
+
   useEffect(() => {
-    fetchTasks(setData);
+    fetchTasks(setData, location);
   }, []);
 
   const handleDragStart = (e, card, sourceLaneId) => {
@@ -221,7 +233,7 @@ function Kanban() {
 
   return (
     <div className="kanban-board">
-      <AddTaskCard onTaskAdded={() => fetchTasks(setData)} />
+      <AddTaskCard onTaskAdded={() => fetchTasks(setData)}/>
       {data.lanes.map((lane) => (
         <div
           key={lane.id}

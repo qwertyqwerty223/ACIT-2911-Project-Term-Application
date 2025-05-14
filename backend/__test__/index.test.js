@@ -21,7 +21,7 @@ describe('create new task', () => {
 })
 
 describe('get one existing task', () => {
-    test('returns status code 200 if a the requested task is retrieved', async () => {
+    test('returns status code 200 if the requested task is retrieved', async () => {
 
         const newTask = await request(app).post('/tasks/create-task').send({
             "description": "create documentation using something",
@@ -54,7 +54,7 @@ describe('update existing task', () => {
 });
 
 describe('delete existing task', () => {
-    test('returns status code 200 if a task was updated', async () => {
+    test('returns status code 200 if a task was deleted', async () => {
 
         const newTask = await request(app).post('/tasks/create-task').send({
             "description": "create documentation using something",

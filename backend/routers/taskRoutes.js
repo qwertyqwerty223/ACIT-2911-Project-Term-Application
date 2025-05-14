@@ -3,7 +3,7 @@ const { getAllTasks, getTaskById, postOneTask, updateOneTask ,deleteOneTask} = r
 const router = express.Router()
 
 // Get all users
-router.get("/", getAllTasks)
+router.get("/:tokenId", getAllTasks)
 
 // Get one user
 router.get("/:id", getTaskById)

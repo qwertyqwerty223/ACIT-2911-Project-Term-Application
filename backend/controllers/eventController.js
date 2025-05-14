@@ -3,7 +3,7 @@ const { Event } = require("../models/eventModel")
 const getAllEvents = async (req, res) => {
     // Call retrieveAllEventsFromDB to get all events from the db
     try {
-        const events = await Event.find()
+        const events = await Event.find({tokenId: req.params.tokenId})
         return res.status(200).json({events})
     } catch (error) {
         console.error(error.message)

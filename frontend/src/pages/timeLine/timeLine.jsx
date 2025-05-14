@@ -4,11 +4,13 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import "./timeLine.css";
-// import activities from "../../data/sample";
+
+import { useLocation  } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchAllFromEndPoint } from "../../helpers/fetchData";
 import deleteIcon from "../../assets/delete-icon.svg";
+
 
 const formatEvents = (sourceEventData) => {
   const formattedData = sourceEventData.events.map((event) => ({
@@ -21,10 +23,14 @@ const formatEvents = (sourceEventData) => {
   return formattedData;
 };
 
-const fetchEvents = async (setTimelineEvent) => {
+const fetchEvents = async (setTimelineEvent, location) => {
+  const token = location.pathname.split('/')[3]
   try {
     // update your server endpoint, if different from localhost:3000
-    const res = await axios.get(fetchAllFromEndPoint("events"));
+    const res = await axios.get(`${fetchAllFromEndPoint("events")}/${token}`, {
+      withCredentials: true
+    });
+    console.log(res)
     // Check if res.data exists
     // If res.data does not exist, it will return undefined . Which we do not want
     const updatedEventData = formatEvents(res.data);
@@ -50,11 +56,15 @@ function TimeLine() {
     title: "",
     description: "",
     date: "",
+    tokenId: ""
   });
 
+  const location = useLocation()
+
   useEffect(() => {
-    fetchEvents(setTimelineEvent);
+    fetchEvents(setTimelineEvent, location);
   }, []);
+
 
   const handleInputChange = (event) => {
     const inputName = event.target.name;
@@ -72,6 +82,7 @@ function TimeLine() {
       title: newEvent.title,
       description: newEvent.description,
       date: newEvent.date,
+      tokenId: location.pathname.split('/')[3]
     };
 
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
@@ -80,7 +91,7 @@ function TimeLine() {
         fetchAllFromEndPoint("events/create-event"),
         newTimelineEvent
       );
-      await fetchEvents(setTimelineEvent);
+      await fetchEvents(setTimelineEvent, location);
     } catch (error) {
       console.error("Error adding event:", error);
     }
@@ -89,6 +100,7 @@ function TimeLine() {
       title: "",
       description: "",
       date: "",
+      tokenId: ""
     });
 
     setIsFormVisible(false);
