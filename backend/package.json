@@ -1,0 +1,39 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.14.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.1.4",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.1"
+  },
+  "scripts": {
+    "test": "jest",
+    "dev": "nodemon server.js"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/__test__/setup.js"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "controllers/**/*.js",
+      "models/**/*.js",
+      "routers/**/*.js",
+      "app.js",
+      "!server.js",
+      "!**/__test__/**"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
+    ],
+    "coverageDirectory": "coverage"
+  }
+}
