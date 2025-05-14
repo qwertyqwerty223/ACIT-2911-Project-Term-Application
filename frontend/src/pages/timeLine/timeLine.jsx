@@ -172,4 +172,4 @@ function TimeLine() {
   );
 }
 
-export { fetchEvents, deleteEvent, };
+export default TimeLine;
