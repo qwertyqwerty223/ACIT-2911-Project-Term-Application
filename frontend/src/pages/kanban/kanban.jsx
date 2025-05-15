@@ -1,5 +1,5 @@
 // import { fetchAllFromEndPoint } from "../../helpers/fetchData"
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import deleteIcon from "../../assets/delete-icon.svg";
 import axios from "axios";
 import "./kanban.css";
