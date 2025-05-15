@@ -12,7 +12,7 @@ router.get("/:id", getTaskById)
 router.post("/create-task", postOneTask)
 
 // // Update Task
-router.put("/:id", updateOneTask)
+router.patch("/:id", updateOneTask)
 
 // Delete task
 router.delete("/:id", deleteOneTask)

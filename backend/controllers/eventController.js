@@ -35,7 +35,16 @@ const postOneEvent = async (req, res) => {
    
 const updateOneEvent = async (req, res) => {
     try {
-        const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body)
+        const itemsToUpdate = () => {
+            let updateObj = {}
+            if(req.body.title) updateObj.title = req.body.title 
+            if(req.body.description) updateObj.description = req.body.description
+            if(req.body.date) updateObj.date = req.body.date
+            if(req.body.tokenId) updateObj.tokenId = req.body.tokenId
+            return updateObj
+        }
+    
+        await Event.findByIdAndUpdate(req.params.id, itemsToUpdate())
         return res.json({ "message": "Event updated successfully"})
     } catch (error) {
         console.error(error.message)

@@ -10,7 +10,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchAllFromEndPoint } from "../../helpers/fetchData";
 import deleteIcon from "../../assets/delete-icon.svg";
-import React from "react";
+import editIcon from "../../assets/edit-icon.svg";
+
 
 
 const formatEvents = (sourceEventData) => {
@@ -63,6 +64,8 @@ const deleteEvent = async (eventID, atEventDeleted) => {
 
 function TimeLine() {
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isUpdate, setUpdate] = useState(false)
+  const [eventId, setEventId] = useState('')
   const [timelineEvents, setTimelineEvent] = useState([]);
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -118,23 +121,51 @@ function TimeLine() {
     setIsFormVisible(false);
   };
 
+  const updateEvent = async (eventID) => {
+    const updatedTimelineEvent = {
+      title: newEvent.title,
+      description: newEvent.description,
+      date: newEvent.date,
+    };
+
+    // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
+    try {
+      await axios.patch(
+        fetchAllFromEndPoint(`events/${eventID}`),
+        newEvent
+      );
+      await fetchEvents(setTimelineEvent, location);
+    } catch (error) {
+      console.error("Error updating event:", error);
+    }
+
+    setNewEvent({
+      title: "",
+      description: "",
+      date: "",
+      tokenId: ""
+    });
+
+    setIsFormVisible(false);
+  };
+
+
   return (
     <div className="timeline">
       <button
         onClick={() => setIsFormVisible(!isFormVisible)}
         className="add-event-button"
       >
-        {isFormVisible ? "Cancel" : "Add Timeline Event"}
+        {isFormVisible ? "Cancel" : 'Add Timeline Event'}
       </button>
 
       {isFormVisible && (
-        <form onSubmit={AddNewEvent} className="add-event-form">
+        <form onSubmit={isUpdate ?()=>{updateEvent(eventId)}: AddNewEvent} className="add-event-form">
           <input
             type="text"
             name="title"
             placeholder="Event Title"
             onChange={handleInputChange}
-            required
           />
 
           <input
@@ -143,7 +174,6 @@ function TimeLine() {
             placeholder="Write a description for the event"
             value={newEvent.description}
             onChange={handleInputChange}
-            required
           />
 
           <input
@@ -151,9 +181,8 @@ function TimeLine() {
             name="date"
             value={newEvent.date}
             onChange={handleInputChange}
-            required
           />
-          <button type="submit">Save Event</button>
+          <button type="submit">{isUpdate ? 'Update Event': 'Add Event'}</button>
         </form>
       )}
       <VerticalTimeline>
@@ -171,11 +200,22 @@ function TimeLine() {
             <button
               className="delete-event-button"
               onClick={() => {
-                deleteEvent(a.id, () => fetchEvents(setTimelineEvent));
+                deleteEvent(a.id, () => fetchEvents(setTimelineEvent, location));
               }}
-              title="Delete Task"
+              title="Delete event"
             >
               <img src={deleteIcon} alt="Delete Icon" />
+            </button>
+            <button
+              className="update-event-button"
+              onClick={() => {
+                setIsFormVisible(true)
+                setUpdate(true)
+                setEventId(a.id)
+              }}
+              title="update event"
+            >
+              <img src={editIcon} alt="Delete Icon" />
             </button>
           </VerticalTimelineElement>
         ))}

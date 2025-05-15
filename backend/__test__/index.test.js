@@ -84,7 +84,7 @@ describe('update existing task', () => {
         
         const taskId = newTask.body._id
 
-        const res = await request(app).put(`/tasks/${taskId}`).send({
+        const res = await request(app).patch(`/tasks/${taskId}`).send({
             description: 'create documentation using anything other than notion',
         });
         expect(res.statusCode).toBe(200);
@@ -168,7 +168,7 @@ describe('update existing event', () => {
         
         const eventId = newEvent.body._id
 
-        const res = await request(app).put(`/events/${eventId}`).send({
+        const res = await request(app).patch(`/events/${eventId}`).send({
             description: 'attend presentation',
         });
         expect(res.statusCode).toBe(200);

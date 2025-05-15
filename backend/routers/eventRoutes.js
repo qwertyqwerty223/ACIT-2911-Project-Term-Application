@@ -12,7 +12,7 @@ router.get("/:id", getEventById)
 router.post("/create-event", postOneEvent)
 
 // update event
-router.put("/:id", updateOneEvent)
+router.patch("/:id", updateOneEvent)
 
 // Delete event
 router.delete("/:id", deleteOneEvent)
