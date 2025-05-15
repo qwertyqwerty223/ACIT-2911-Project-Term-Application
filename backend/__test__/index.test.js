@@ -2,21 +2,55 @@ const app = require('../app')
 const request = require('supertest')
 
 
-describe('retrieve all data', () => {
-    test('returns status code 200 if all tasks are retrieved', async () => {
-        const res = await request(app).get('/tasks');
-        expect(res.statusCode).toBe(200); 
+describe('Get all task', ()=>{
+    test('Returns statusCode of 200 if all tasks were retrieved', async () => {
+        const newTaskRes = await request(app).post('/tasks/create-task').send({
+            "description": "create documentation using something",
+            "status": "planned",
+            "user": "Toby",
+            "tokenId": "234"
+        });
+
+        const tokenId = newTaskRes.body.tokenId
+
+        expect(tokenId).toBeDefined();
+
+        const res = await request(app).get(`/tasks/${tokenId}`);
+
+        expect(res.statusCode).toBe(200);
+
+        
     });
-});
+    test('Returns status code of 404 if the requested endpoint is not found', async ()=>{
+        const tokenId = '1234'
+        const res = await request(app).get(`/task/${tokenId}`);
+
+        expect(res.statusCode).toBe(404);
+    })
+})
+
+
 
 
 describe('create new task', () => {
     test('returns status code 201 if a task was created', async () => {
         const res = await request(app).post('/tasks/create-task').send({
-            "description": "create documentation using notion",
-            "status": "planned"
+            "description": "create documentation using something",
+            "status": "planned",
+            "user": "Toby",
+            "tokenId": "234"
         })
         expect(res.statusCode).toBe(201);
+    })
+
+    test('returns status code 404 if an incorrect endpoint was hit', async () => {
+        const res = await request(app).post('/task/create-task').send({
+            "description": "create documentation using something",
+            "status": "planned",
+            "user": "Toby",
+            "tokenId": "234"
+        })
+        expect(res.statusCode).toBe(404);
     })
 })
 
@@ -25,7 +59,9 @@ describe('get one existing task', () => {
 
         const newTask = await request(app).post('/tasks/create-task').send({
             "description": "create documentation using something",
-            "status": "planned"
+            "status": "planned",
+            "user": "Toby",
+            "tokenId": "234"
         })
         
         const taskId = newTask.body._id
@@ -41,7 +77,9 @@ describe('update existing task', () => {
 
         const newTask = await request(app).post('/tasks/create-task').send({
             "description": "create documentation using something",
-            "status": "planned"
+            "status": "planned",
+            "user": "Toby",
+            "tokenId": "234"
         })
         
         const taskId = newTask.body._id
@@ -58,7 +96,9 @@ describe('delete existing task', () => {
 
         const newTask = await request(app).post('/tasks/create-task').send({
             "description": "create documentation using something",
-            "status": "planned"
+            "status": "planned",
+            "user": "Toby",
+            "tokenId": "234"
         })
         
         const taskId = newTask.body._id
@@ -69,19 +109,32 @@ describe('delete existing task', () => {
     });
 })
 
-//-------------Testing Events end points--------------------
-describe('retrieve all data', () => {
-    test('returns status code 200 if all events are retrieved', async () => {
-        const res = await request(app).get('/events');
-        expect(res.statusCode).toBe(200); 
+// //-------------Testing Events end points--------------------
+describe('get all events', ()=>{
+    test('returns status code of 200 if all events were retrieved', async () => {
+        const newEventRes = await request(app).post('/events/create-event').send({
+            "title": "Lorem ipsum",
+            "description": "Stand up meeting",
+            "tokenId": "234"
+        });
+
+        const tokenId = newEventRes.body.tokenId
+
+        expect(tokenId).toBeDefined();
+
+        const res = await request(app).get(`/events/${tokenId}`);
+
+        expect(res.statusCode).toBe(200);
     });
-});
+})
+
 
 describe('create new event', () => {
     test('returns status code 201 if a event was created', async () => {
         const res = await request(app).post('/events/create-event').send({
             "title": "Lorem ipsum",
             "description": "Stand up meeting",
+            "tokenId": "234"
         })
         expect(res.statusCode).toBe(201);
     })
@@ -93,6 +146,7 @@ describe('get one existing event', () => {
         const newEvent = await request(app).post('/events/create-event').send({
             "title": "Lorem ipsum",
             "description": "Stand up meeting",
+            "tokenId": "234"
         })
         
         const eventId = newEvent.body._id
@@ -109,6 +163,7 @@ describe('update existing event', () => {
         const newEvent = await request(app).post('/events/create-event').send({
             "title": "Lorem ipsum",
             "description": "Stand up meeting",
+            "tokenId": "234"
         })
         
         const eventId = newEvent.body._id
@@ -126,6 +181,7 @@ describe('delete existing event', () => {
         const newEvent = await request(app).post('/events/create-event').send({
             "title": "Lorem ipsum",
             "description": "Stand up meeting",
+            "tokenId": "234"
         })
         
         const eventId = newEvent.body._id
@@ -135,3 +191,13 @@ describe('delete existing event', () => {
         expect(res.statusCode).toBe(200);
     });
 })
+
+// -----------------------Testing Projects end points-------------------------
+// describe('get all projects', ()=>{
+//     test('returns status code 200, if all projects are retrieved', async () => {
+//         const res = await request(app).get(`/projects`);
+//         expect(res.statusCode).toBe(200);
+//     });
+// })
+
+

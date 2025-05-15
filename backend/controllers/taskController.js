@@ -6,7 +6,7 @@ const getAllTasks = async (req, res) => {
         return res.json(tasks)
     } catch (error) {
         console.error(error.message)
-        return res.status(500).json({"message": error.message.message})
+        return res.status(500).json({"message": error.message})
     }
 }
 

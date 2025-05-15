@@ -24,13 +24,13 @@ const getOneProject = async (req, res) => {
 
 const postOneProject = async (req, res) => {
     try {
-        console.log(req.session.stateId)
+
         const { name } = req.body
         
         const newProject = new Project({name:name, sessionId: req.session.stateId, tokenId: uuidv4()})
         newProject.save()
         const projects = await Project.find({sessionId: req.session.stateId})
-        res.json(projects)
+        res.status(201).json(projects)
     } catch (error) {
         console.error(error.message)
         return res.status(500).json({"message": error.message})
