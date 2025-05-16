@@ -1,4 +1,3 @@
 const { TextEncoder, TextDecoder } = require("util");
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-process.env.VITE_BASE_SERVER_URL = 'http://localhost:3000';

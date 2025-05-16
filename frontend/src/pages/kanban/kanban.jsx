@@ -3,7 +3,7 @@ import deleteIcon from "../../assets/delete-icon.svg";
 import editIcon from "../../assets/edit-icon.svg";
 import axios from "axios";
 import "./kanban.css";
-import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+
 import { useLocation } from "react-router-dom";
 
 function AddTaskCard({
@@ -101,7 +101,7 @@ const mapTasksToLanes = (tasksFromServer) => {
 // import.meta.env.VITE_BASE_SERVER_URL}/tasks/${card.id
 const updateStatusOnCardDrag = async (card, newStatus) => {
   try {
-    await axios.patch(`${fetchAllFromEndPoint(`tasks/${card.id}`)}`, {
+    await axios.patch(`http://localhost:3000/tasks/${card.id}`, {
       _id: card.id,
       description: card.description,
       status: newStatus,
@@ -114,7 +114,7 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
 
 const deleteTask = async (cardID, onTaskDeleted) => {
   try {
-    await axios.delete(`${fetchAllFromEndPoint(`tasks/${cardID}`)}`);
+    await axios.delete(`http://localhost:3000/tasks/${cardID}`);
     if (onTaskDeleted) onTaskDeleted();
     window.location.reload();
   } catch (error) {
@@ -125,9 +125,10 @@ const deleteTask = async (cardID, onTaskDeleted) => {
 const fetchTasks = async (setData) => {
   try {
     const tokenId = window.location.pathname.split("/")[3];
-    const res = await axios.get(fetchAllFromEndPoint(`tasks/${tokenId}`), {
+    const res = await axios.get(`http://localhost:3000/tasks/${tokenId}`, {
       withCredentials: true,
     });
+
     setData(mapTasksToLanes(res.data));
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -172,7 +173,7 @@ function Kanban() {
     try {
       const tokenId = window.location.pathname.split("/")[3];
       await axios.post(
-        fetchAllFromEndPoint("tasks/create-task"),
+        `http://localhost:3000/tasks/create-task`,
         { ...formData, tokenId, user: formData.user ? [formData.user] : [] },
         { withCredentials: true }
       );
@@ -188,7 +189,7 @@ function Kanban() {
     e.preventDefault();
     try {
       await axios.patch(
-        fetchAllFromEndPoint(`tasks/${editingTaskId}`),
+        `http://localhost:3000/tasks/${editingTaskId}`,
         {
           description: formData.description,
           user: formData.user ? [formData.user] : [],

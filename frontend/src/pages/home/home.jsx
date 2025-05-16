@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 
@@ -18,7 +18,7 @@ function Home() {
     e.preventDefault();
     try {
       const {data: projectList } = await axios.post(
-        fetchAllFromEndPoint("projects/create-project"),
+        'http://localhost:3000/projects/create-project',
         { name },
         {
           withCredentials: true,
@@ -34,7 +34,7 @@ function Home() {
 
   const handleServerSession = async () => {
     try {
-      const res = await axios.get(fetchAllFromEndPoint("projects/"), {
+      const res = await axios.get('http://localhost:3000/projects', {
         withCredentials: true,
       });
       if (!res.data.length) return;
@@ -54,7 +54,7 @@ function Home() {
 
   const handleDeleteProject = async (id) => {
     try {
-      await axios.delete(fetchAllFromEndPoint(`projects/${id}`), {
+      await axios.delete(`http://localhost:3000/projects/${id}`, {
         withCredentials: true,
       });
       setFirstPageLoad((f) => !f);

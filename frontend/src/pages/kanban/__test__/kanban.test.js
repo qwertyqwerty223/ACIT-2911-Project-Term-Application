@@ -16,6 +16,7 @@ jest.mock("../../../assets/edit-icon.svg", () => "edit-icon.svg");
 
 // Test Block for fetching tasks
 describe("fetchTasks", () => {
+
   // Test Case #1: Successful task fetching
   it("should fetch tasks and update data correctly", async () => {
     // Create the shape of mock data for axios.get

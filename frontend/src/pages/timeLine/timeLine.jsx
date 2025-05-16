@@ -8,7 +8,7 @@ import "./timeLine.css";
 import { useLocation  } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+
 import deleteIcon from "../../assets/delete-icon.svg";
 import editIcon from "../../assets/edit-icon.svg";
 
@@ -39,7 +39,7 @@ const fetchEvents = async (setTimelineEvent, location) => {
   const token = location.pathname.split('/')[3]
   try {
     // update your server endpoint, if different from localhost:3000
-    const res = await axios.get(`${fetchAllFromEndPoint("events")}/${token}`, {
+    const res = await axios.get(`http://localhost:3000/events/${token}`, {
       withCredentials: true
     });
     console.log(res)
@@ -55,7 +55,7 @@ const fetchEvents = async (setTimelineEvent, location) => {
 
 const deleteEvent = async (eventID, atEventDeleted) => {
   try {
-    await axios.delete(fetchAllFromEndPoint(`events/${eventID}`));
+    await axios.delete(`http://localhost:3000/events/${eventID}`);
     atEventDeleted();
   } catch (error) {
     console.error("Error Deleting event:", error);
@@ -103,7 +103,7 @@ function TimeLine() {
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
       await axios.post(
-        fetchAllFromEndPoint("events/create-event"),
+        'http://localhost:3000/events/create-event',
         newTimelineEvent
       );
       await fetchEvents(setTimelineEvent, location);
@@ -131,7 +131,7 @@ function TimeLine() {
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
       await axios.patch(
-        fetchAllFromEndPoint(`events/${eventID}`),
+        `http://localhost:3000/events/${eventID}`,
         newEvent
       );
       await fetchEvents(setTimelineEvent, location);
