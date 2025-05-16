@@ -10,7 +10,7 @@ const PORT = 3000;
 
 const startServer = async () => {
   try {
-    await mongoose.connect("mongodb+srv://jerryolisa:4nMlhci1yQZTepqF@cluster0.k0wjqhd.mongodb.net/acit2911?retryWrites=true&w=majority&appName=Cluster0");
+    await mongoose.connect(`${process.env.DATABASE_URI}`);
 
     console.log("DB is working");
 
