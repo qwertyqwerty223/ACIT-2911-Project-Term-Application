@@ -7,6 +7,8 @@ import Kanban from "./pages/kanban/kanban";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/home";
 
+
+
 function App() {
   return (
     <>
@@ -17,6 +19,7 @@ function App() {
           <div>
             <Routes>
               <Route path="/" element={<Home />} />
+              
               <Route path="/:projectName/timeline/:tokenId" element={<TimeLine />} />
               <Route path="/:projectName/kanban/:tokenId" element={<Kanban />} />
             </Routes>

@@ -105,7 +105,7 @@ const mapTasksToLanes = (tasksFromServer) => {
 
 const updateStatusOnCardDrag = async (card, newStatus) => {
   try {
-    await axios.put(`http://localhost:3000/tasks/${card.id}`, {
+    await axios.patch(`http://localhost:3000/tasks/${card.id}`, {
       _id: card.id,
       description: card.description,
       status: newStatus,
