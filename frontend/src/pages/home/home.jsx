@@ -1,82 +1,112 @@
-import {useState, useEffect, useRef} from 'react'
-import axios from 'axios';
-import { fetchAllFromEndPoint } from '../../helpers/fetchData';
-import { useNavigate } from 'react-router-dom';
-
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+import { useNavigate } from "react-router-dom";
+import "./home.css";
 
 function Home() {
   const [name, setName] = useState("");
-  const [firstPageLoad, setFirstPageLoad] = useState(false)
-  const [projects, setProjects] = useState([])
-  const navigate = useNavigate()
+  const [firstPageLoad, setFirstPageLoad] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setName(e.target.value);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-        const res = await axios.post(fetchAllFromEndPoint('projects/create-project'), {name}, {
-            withCredentials: true
-        })
-        console.log(res)
+      const {data: projectList } = await axios.post(
+        fetchAllFromEndPoint("projects/create-project"),
+        { name },
+        {
+          withCredentials: true,
+        }
+      );
+      setProjects(projectList);
+      setName("");
+      window.location.reload();
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
   const handleServerSession = async () => {
     try {
-        const res = await axios.get(fetchAllFromEndPoint('projects/'), {
-            withCredentials: true
-        })
-        // If the response returns no data or an empty data object, escape the function
-        if(!res.data.length) return 
-        // If the res.data returns the sessionId, it means the user is using the application for the first time.
-        if(res.data.sessionId){
-          return console.log("Begin your journey. Enter new project")
-        }
-        setProjects(res.data)
+      const res = await axios.get(fetchAllFromEndPoint("projects/"), {
+        withCredentials: true,
+      });
+      if (!res.data.length) return;
+      if (res.data.sessionId) {
+        return console.log("Begin your journey. Enter new project");
+      }
+      setProjects(res.data);
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const handleProjectClick = (e) => {
-    e.preventDefault()
-    navigate(`/${e.target.dataset.name}/timeline/${ e.target.dataset.token}`)
-  }
+    e.preventDefault();
+    navigate(`/${e.target.dataset.name}/timeline/${e.target.dataset.token}`);
+  };
 
-  useEffect(()=>{
-    handleServerSession()
-  },[firstPageLoad])
+  const handleDeleteProject = async (id) => {
+    try {
+      await axios.delete(fetchAllFromEndPoint(`projects/${id}`), {
+        withCredentials: true,
+      });
+      setFirstPageLoad((f) => !f);
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to delete Project", err);
+    }
+  };
+
+  useEffect(() => {
+    handleServerSession();
+  }, [firstPageLoad]);
 
   return (
-    <div>
-        <form>
-            <div>
-                <label>Name:</label><br />
-                <input
-                type="text"
-                name="name"
-                value={name}
-                onChange={handleChange}
-                required
-                />
-            </div>
+    <div className="home-container">
+      <form className="home-form" onSubmit={handleSubmit}>
+        <input
+          className="home-input"
+          type="text"
+          name="name"
+          placeholder="New project name…"
+          value={name}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit" className="home-submit">
+          Create Project
+        </button>
+      </form>
 
-            <button onClick={handleSubmit}>Submit</button>
-        </form>
-        <div>
-          {
-            projects && projects.map((project) => (<p key={project._id} data-token={project.tokenId} data-name={project.name} onClick={handleProjectClick}>{project.name}</p>))
-          }
-        </div>
+      <div className="home-projects">
+        {projects.map((project) => (
+          <div key={project._id} className="home-project">
+            <p
+              data-token={project.tokenId}
+              data-name={project.name}
+              onClick={handleProjectClick}
+              className="home-projectName"
+            >
+              {project.name}
+            </p>
+            <button
+              onClick={() => handleDeleteProject(project._id)}
+              className="home-delete"
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
-    
   );
-  
 }
 
-export default Home
+export default Home;
