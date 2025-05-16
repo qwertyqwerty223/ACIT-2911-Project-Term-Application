@@ -116,6 +116,7 @@
   font-family: 'Roboto', sans-serif;
   font-size: 0.9rem;
   box-sizing: border-box;
+}
 
 .edit-task-form {
   display: flex;
