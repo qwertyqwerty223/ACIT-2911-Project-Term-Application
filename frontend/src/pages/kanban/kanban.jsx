@@ -98,10 +98,10 @@ const mapTasksToLanes = (tasksFromServer) => {
 
   return updatedData;
 };
-
+// import.meta.env.VITE_BASE_SERVER_URL}/tasks/${card.id
 const updateStatusOnCardDrag = async (card, newStatus) => {
   try {
-    await axios.patch(`${import.meta.env.VITE_BASE_SERVER_URL}/tasks/${card.id}`, {
+    await axios.patch(`${fetchAllFromEndPoint(`tasks/${card.id}`)}`, {
       _id: card.id,
       description: card.description,
       status: newStatus,
@@ -114,7 +114,7 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
 
 const deleteTask = async (cardID, onTaskDeleted) => {
   try {
-    await axios.delete(`${import.meta.env.VITE_BASE_SERVER_URL}/tasks/${cardID}`);
+    await axios.delete(`${fetchAllFromEndPoint(`tasks/${cardID}`)}`);
     if (onTaskDeleted) onTaskDeleted();
     window.location.reload();
   } catch (error) {
