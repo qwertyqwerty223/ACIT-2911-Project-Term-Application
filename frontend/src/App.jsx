@@ -28,7 +28,7 @@ function AppContent() {
 
   return (
     <div className="App">
-      <h1>BCIT Projects Term Assistant</h1>
+      <h1>BCIT Project Term Assistant</h1>
       {showHeader && <Header />}
       <div className="AppRoutes">
         <Routes>
