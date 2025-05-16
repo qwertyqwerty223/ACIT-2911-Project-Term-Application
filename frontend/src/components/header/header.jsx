@@ -10,16 +10,19 @@ function Header() {
 
     let projectName = location.pathname.split('/')[1]
     let tokenId = location.pathname.split('/')[3]
+
+    const handleHomeClick = () => navigate("/");
     
-    const handleTimeLineClick = (e) => {
+    const handleTimeLineClick = () => {
         navigate(`/${projectName}/timeline/${tokenId}`)
     }
-    const handleKanbanClick = (e) => {
+    const handleKanbanClick = () => {
         navigate(`/${projectName}/kanban/${tokenId}`)
     }
     return (
         <nav className="NavBar">
             <ul>
+                <li onClick={handleHomeClick}>Home</li>
                 <li onClick={handleTimeLineClick}>Timeline</li>
                 <li onClick={handleKanbanClick}>Kanban</li>
             </ul>
