@@ -14,6 +14,11 @@ const EventSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    tokenId: {
+        type: String,
+        required: true,
+    },
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }
 });
 
 const Event = mongoose.model("Event", EventSchema)

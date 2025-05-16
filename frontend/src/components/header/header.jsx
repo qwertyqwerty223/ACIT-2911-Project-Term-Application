@@ -1,16 +1,21 @@
 import React from 'react'
 import './header.css'
 import {
-    useNavigate
+    useNavigate, useLocation
   } from "react-router-dom";
 
 function Header() {
     const navigate = useNavigate()
+    const location = useLocation()
+
+    let projectName = location.pathname.split('/')[1]
+    let tokenId = location.pathname.split('/')[3]
+    
     const handleTimeLineClick = (e) => {
-        navigate('/')
+        navigate(`/${projectName}/timeline/${tokenId}`)
     }
     const handleKanbanClick = (e) => {
-        navigate('/kanban')
+        navigate(`/${projectName}/kanban/${tokenId}`)
     }
     return (
         <nav className="NavBar">

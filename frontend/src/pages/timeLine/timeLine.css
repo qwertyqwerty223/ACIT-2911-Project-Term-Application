@@ -77,6 +77,7 @@
   transform: scale(1.1);
 }
 
+
 body {
     background-color: #F0EBD8;
     font-family: 'Open Sans', Arial, sans-serif;
@@ -86,3 +87,31 @@ body {
 h1, h2, h3, .nav, .btn {
   font-family: 'Poppins', Helvetica, sans-serif;
 }
+
+.update-event-button {
+  position: absolute;
+  bottom: 10px;
+  right: 50px;
+  margin-bottom: 0;
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.update-event-button img {
+  width: 16px;
+  height: 16px;
+}
+
+.update-event-button:hover {
+  background: #f32121;
+  box-shadow: 0 4px 16px rgba(159, 8, 8, 0.1);
+  transform: scale(1.1);
+}
+

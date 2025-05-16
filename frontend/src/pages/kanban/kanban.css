@@ -82,6 +82,7 @@
   transform: scale(1.1);
 }
 
+
 .add-task-button {
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
@@ -115,4 +116,39 @@
   font-family: 'Roboto', sans-serif;
   font-size: 0.9rem;
   box-sizing: border-box;
+
+.edit-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.edit-task-form input,
+.edit-task-form select {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+.edit-task-form button {
+  width: auto;           /* don’t stretch full-width */
+  padding: 0.5rem 1rem;  /* comfortable padding */
+  font-size: 0.9rem;     /* match your inputs */
+  margin-top: 0.25rem;
+}
+
+/* Style the inline edit-icon button exactly like delete */
+.edit-task-button {
+  position: absolute;
+  bottom: 10px;
+  right: 40px;           /* adjust so it sits beside delete */
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-task-button img {
+  width: 16px;
+  height: 16px;
 }
