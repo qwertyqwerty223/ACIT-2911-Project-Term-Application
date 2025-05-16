@@ -173,11 +173,11 @@ describe("updateStatusOnCardDrag", () => {
       user: "User1",
     };
     const newStatus = "Completed";
-    axios.put.mockResolvedValue({});
+    axios.patch.mockResolvedValue({});
 
     await updateStatusOnCardDrag(card, newStatus);
 
-    expect(axios.put).toHaveBeenCalledWith("http://localhost:3000/tasks/1", {
+    expect(axios.patch).toHaveBeenCalledWith("http://localhost:3000/tasks/1", {
       _id: "1",
       description: "Task no. 1",
       status: "Completed",
@@ -194,11 +194,11 @@ describe("updateStatusOnCardDrag", () => {
     };
     const newStatus = "Completed";
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    axios.put.mockRejectedValue(new Error("API PUT Error"));
+    axios.patch.mockRejectedValue(new Error("API PUT Error"));
 
     await updateStatusOnCardDrag(card, newStatus);
 
-    expect(axios.put).toHaveBeenCalledWith(
+    expect(axios.patch).toHaveBeenCalledWith(
       "http://localhost:3000/tasks/1",
       expect.anything()
     );
