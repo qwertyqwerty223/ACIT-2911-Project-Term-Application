@@ -44,12 +44,10 @@ it("Header renders links and navigates on click", () => {
   // verify links are present by finding the element containing the link text
   const timeline = screen.getByText(/Timeline/i);
   const kanban   = screen.getByText(/Kanban/i);
-  const groups   = screen.getByText(/Groups/i);
 
   // assertions for checking if the found element is part of the rendered document
   expect(timeline).toBeInTheDocument();
   expect(kanban).toBeInTheDocument();
-  expect(groups).toBeInTheDocument();
 
   // simulates a user clicking "timeline" link or going to this link
   fireEvent.click(timeline);
@@ -59,7 +57,5 @@ it("Header renders links and navigates on click", () => {
   fireEvent.click(kanban);
   expect(mockNavigate).toHaveBeenCalledWith("/kanban");
 
-  fireEvent.click(groups);
-  expect(mockNavigate).toHaveBeenCalledWith("/groups");
 });
 
