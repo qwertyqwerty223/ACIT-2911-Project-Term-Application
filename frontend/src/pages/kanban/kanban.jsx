@@ -116,6 +116,7 @@ const deleteTask = async (cardID, onTaskDeleted) => {
   try {
     await axios.delete(`http://localhost:3000/tasks/${cardID}`);
     if (onTaskDeleted) onTaskDeleted();
+    window.location.reload();
   } catch (error) {
     console.error("Error deleting task:", error);
   }
@@ -176,6 +177,7 @@ function Kanban() {
         { withCredentials: true }
       );
       await fetchTasks();
+      window.location.reload();
       handleFormCancel();
     } catch (err) {
       console.error(err);
@@ -195,6 +197,7 @@ function Kanban() {
         { withCredentials: true }
       );
       await fetchTasks();
+      window.location.reload();
       handleFormCancel();
     } catch (err) {
       console.error(err);
