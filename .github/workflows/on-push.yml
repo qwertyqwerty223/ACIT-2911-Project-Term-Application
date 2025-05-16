@@ -1,6 +1,8 @@
+name: feature to Development Build & PR
+
 on:
   push:
-    branches: ["Taranjot/**", "Minh/**", "jeremiah/**"]
+    branches: "Development"
 
 jobs:
   build:
