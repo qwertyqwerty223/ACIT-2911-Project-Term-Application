@@ -1,6 +1,6 @@
 on:
   push:
-    branches: ["Development"]
+    branches: ["Taranjot/**", "Minh/**", "jeremiah/**"]
 
 jobs:
   build:
