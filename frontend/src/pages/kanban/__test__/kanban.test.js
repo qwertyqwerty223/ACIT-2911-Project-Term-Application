@@ -12,9 +12,11 @@ import { waitFor } from "@testing-library/react"; // React testing utilities
 jest.mock("axios");
 // mock SVG asset to avoid file-loader issues
 jest.mock("../../../assets/delete-icon.svg", () => "delete-icon.svg");
+jest.mock("../../../assets/edit-icon.svg", () => "edit-icon.svg");
 
 // Test Block for fetching tasks
 describe("fetchTasks", () => {
+
   // Test Case #1: Successful task fetching
   it("should fetch tasks and update data correctly", async () => {
     // Create the shape of mock data for axios.get
@@ -172,11 +174,11 @@ describe("updateStatusOnCardDrag", () => {
       user: "User1",
     };
     const newStatus = "Completed";
-    axios.put.mockResolvedValue({});
+    axios.patch.mockResolvedValue({});
 
     await updateStatusOnCardDrag(card, newStatus);
 
-    expect(axios.put).toHaveBeenCalledWith("http://localhost:3000/tasks/1", {
+    expect(axios.patch).toHaveBeenCalledWith("http://localhost:3000/tasks/1", {
       _id: "1",
       description: "Task no. 1",
       status: "Completed",
@@ -193,11 +195,11 @@ describe("updateStatusOnCardDrag", () => {
     };
     const newStatus = "Completed";
     const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    axios.put.mockRejectedValue(new Error("API PUT Error"));
+    axios.patch.mockRejectedValue(new Error("API PUT Error"));
 
     await updateStatusOnCardDrag(card, newStatus);
 
-    expect(axios.put).toHaveBeenCalledWith(
+    expect(axios.patch).toHaveBeenCalledWith(
       "http://localhost:3000/tasks/1",
       expect.anything()
     );

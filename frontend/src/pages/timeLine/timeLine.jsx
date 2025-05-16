@@ -4,12 +4,15 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import "./timeLine.css";
-// import activities from "../../data/sample";
+
+import { useLocation  } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchAllFromEndPoint } from "../../helpers/fetchData";
+
 import deleteIcon from "../../assets/delete-icon.svg";
-import React from "react";
+import editIcon from "../../assets/edit-icon.svg";
+
+
 
 const formatEvents = (sourceEventData) => {
   const formattedData = sourceEventData.events
@@ -32,10 +35,14 @@ const formatEvents = (sourceEventData) => {
   return formattedData;
 };
 
-const fetchEvents = async (setTimelineEvent) => {
+const fetchEvents = async (setTimelineEvent, location) => {
+  const token = location.pathname.split('/')[3]
   try {
     // update your server endpoint, if different from localhost:3000
-    const res = await axios.get(fetchAllFromEndPoint("events"));
+    const res = await axios.get(`http://localhost:3000/events/${token}`, {
+      withCredentials: true
+    });
+    console.log(res)
     // Check if res.data exists
     // If res.data does not exist, it will return undefined . Which we do not want
     const updatedEventData = formatEvents(res.data);
@@ -48,7 +55,7 @@ const fetchEvents = async (setTimelineEvent) => {
 
 const deleteEvent = async (eventID, atEventDeleted) => {
   try {
-    await axios.delete(fetchAllFromEndPoint(`events/${eventID}`));
+    await axios.delete(`http://localhost:3000/events/${eventID}`);
     atEventDeleted();
   } catch (error) {
     console.error("Error Deleting event:", error);
@@ -57,16 +64,22 @@ const deleteEvent = async (eventID, atEventDeleted) => {
 
 function TimeLine() {
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isUpdate, setUpdate] = useState(false)
+  const [eventId, setEventId] = useState('')
   const [timelineEvents, setTimelineEvent] = useState([]);
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
     date: "",
+    tokenId: ""
   });
 
+  const location = useLocation()
+
   useEffect(() => {
-    fetchEvents(setTimelineEvent);
+    fetchEvents(setTimelineEvent, location);
   }, []);
+
 
   const handleInputChange = (event) => {
     const inputName = event.target.name;
@@ -84,15 +97,16 @@ function TimeLine() {
       title: newEvent.title,
       description: newEvent.description,
       date: newEvent.date,
+      tokenId: location.pathname.split('/')[3]
     };
 
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
       await axios.post(
-        fetchAllFromEndPoint("events/create-event"),
+        'http://localhost:3000/events/create-event',
         newTimelineEvent
       );
-      await fetchEvents(setTimelineEvent);
+      await fetchEvents(setTimelineEvent, location);
     } catch (error) {
       console.error("Error adding event:", error);
     }
@@ -101,10 +115,40 @@ function TimeLine() {
       title: "",
       description: "",
       date: "",
+      tokenId: ""
     });
 
     setIsFormVisible(false);
   };
+
+  const updateEvent = async (eventID) => {
+    const updatedTimelineEvent = {
+      title: newEvent.title,
+      description: newEvent.description,
+      date: newEvent.date,
+    };
+
+    // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
+    try {
+      await axios.patch(
+        `http://localhost:3000/events/${eventID}`,
+        newEvent
+      );
+      await fetchEvents(setTimelineEvent, location);
+    } catch (error) {
+      console.error("Error updating event:", error);
+    }
+
+    setNewEvent({
+      title: "",
+      description: "",
+      date: "",
+      tokenId: ""
+    });
+
+    setIsFormVisible(false);
+  };
+
 
   return (
     <div className="timeline">
@@ -112,17 +156,16 @@ function TimeLine() {
         onClick={() => setIsFormVisible(!isFormVisible)}
         className="add-event-button"
       >
-        {isFormVisible ? "Cancel" : "Add Timeline Event"}
+        {isFormVisible ? "Cancel" : 'Add Timeline Event'}
       </button>
 
       {isFormVisible && (
-        <form onSubmit={AddNewEvent} className="add-event-form">
+        <form onSubmit={isUpdate ?()=>{updateEvent(eventId)}: AddNewEvent} className="add-event-form">
           <input
             type="text"
             name="title"
             placeholder="Event Title"
             onChange={handleInputChange}
-            required
           />
 
           <input
@@ -131,7 +174,6 @@ function TimeLine() {
             placeholder="Write a description for the event"
             value={newEvent.description}
             onChange={handleInputChange}
-            required
           />
 
           <input
@@ -139,9 +181,8 @@ function TimeLine() {
             name="date"
             value={newEvent.date}
             onChange={handleInputChange}
-            required
           />
-          <button type="submit">Save Event</button>
+          <button type="submit">{isUpdate ? 'Update Event': 'Add Event'}</button>
         </form>
       )}
       <VerticalTimeline>
@@ -159,11 +200,22 @@ function TimeLine() {
             <button
               className="delete-event-button"
               onClick={() => {
-                deleteEvent(a.id, () => fetchEvents(setTimelineEvent));
+                deleteEvent(a.id, () => fetchEvents(setTimelineEvent, location));
               }}
-              title="Delete Task"
+              title="Delete event"
             >
               <img src={deleteIcon} alt="Delete Icon" />
+            </button>
+            <button
+              className="update-event-button"
+              onClick={() => {
+                setIsFormVisible(true)
+                setUpdate(true)
+                setEventId(a.id)
+              }}
+              title="update event"
+            >
+              <img src={editIcon} alt="Delete Icon" />
             </button>
           </VerticalTimelineElement>
         ))}
@@ -172,4 +224,5 @@ function TimeLine() {
   );
 }
 
-export { fetchEvents, deleteEvent, };
+export {fetchEvents, deleteEvent};
+export default TimeLine;

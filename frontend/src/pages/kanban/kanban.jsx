@@ -1,81 +1,55 @@
-// import { fetchAllFromEndPoint } from "../../helpers/fetchData"
 import { useState, useEffect } from "react";
 import deleteIcon from "../../assets/delete-icon.svg";
+import editIcon from "../../assets/edit-icon.svg";
 import axios from "axios";
 import "./kanban.css";
-import { fetchAllFromEndPoint } from "../../helpers/fetchData";
 
-function AddTaskCard({ status, onTaskAdded }) {
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [newTask, setNewTask] = useState({
-    description: "",
-    user: "",
-    status: "planned", // default value
-  });
+import { useLocation } from "react-router-dom";
 
-  const handleInputChange = (event) => {
-    const inputName = event.target.name;
-    const inputValue = event.target.value;
-    setNewTask({
-      ...newTask,
-      [inputName]: inputValue,
-    });
-  };
-
-  const addNewTask = async (event) => {
-    event.preventDefault();
-    const taskToSend = {
-      description: newTask.description,
-      status: newTask.status,
-      user: newTask.user ? [newTask.user] : [],
-    };
-
-    try {
-      await axios.post(fetchAllFromEndPoint("tasks/create-task"), taskToSend);
-      if (onTaskAdded) onTaskAdded();
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
-    setNewTask({ description: "", user: "", status: "planned" });
-    setIsFormVisible(false);
-  };
-
+function AddTaskCard({
+  visible,
+  mode,
+  data,
+  onToggle,
+  onChange,
+  onSubmit,
+  onCancel,
+}) {
   return (
     <div className="add-task-card">
-      <button
-        onClick={() => setIsFormVisible(!isFormVisible)}
-        className="add-task-button"
-      >
-        {isFormVisible ? "Cancel" : "Add Task"}
+      <button onClick={onToggle} className="add-task-button">
+        {visible ? "Cancel" : mode === "add" ? "Add Task" : "Edit Task"}
       </button>
-      {isFormVisible && (
-        <form onSubmit={addNewTask} className="add-task-form">
+      {visible && (
+        <form onSubmit={onSubmit} className="add-task-form">
           <input
             type="text"
             name="description"
             placeholder="Task Description"
-            value={newTask.description}
-            onChange={handleInputChange}
+            value={data.description}
+            onChange={onChange}
             required
           />
           <input
             type="text"
             name="user"
             placeholder="Assigner user"
-            value={newTask.user}
-            onChange={handleInputChange}
+            value={data.user}
+            onChange={onChange}
           />
           <select
             name="status"
-            value={newTask.status}
-            onChange={handleInputChange}
+            value={data.status}
+            onChange={onChange}
             required
           >
             <option value="planned">Planned</option>
             <option value="in-progress">In-Progress</option>
             <option value="completed">Completed</option>
           </select>
-          <button type="submit">Save Task</button>
+          <button type="submit">
+            {mode === "add" ? "Save Task" : "Update Task"}
+          </button>
         </form>
       )}
     </div>
@@ -124,33 +98,10 @@ const mapTasksToLanes = (tasksFromServer) => {
 
   return updatedData;
 };
-
-const fetchTasks = async (setData) => {
-  try {
-    // update your server endpoint, if different from localhost:3000
-    const res = await axios.get("http://localhost:3000/tasks");
-    const updatedBoardData = mapTasksToLanes(res.data);
-    // console.log(res.data);
-    setData(updatedBoardData);
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-  }
-};
-
+// import.meta.env.VITE_BASE_SERVER_URL}/tasks/${card.id
 const updateStatusOnCardDrag = async (card, newStatus) => {
-  // when you drag the card. get the id task
-  // put request to update the status
   try {
-    // Here's the data format for sending the task
-    //     {
-    //     "_id": "681c45d63acb6423371445e2",
-    //     "description": "task description",
-    //     "status": "'planned' or 'In-Progress' or 'Completed'",
-    //     "user": [],
-    //     "__v": 0
-    // }
-
-    await axios.put(`http://localhost:3000/tasks/${card.id}`, {
+    await axios.patch(`http://localhost:3000/tasks/${card.id}`, {
       _id: card.id,
       description: card.description,
       status: newStatus,
@@ -163,20 +114,107 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
 
 const deleteTask = async (cardID, onTaskDeleted) => {
   try {
-    // Use the correct endpoint for deletion
     await axios.delete(`http://localhost:3000/tasks/${cardID}`);
     if (onTaskDeleted) onTaskDeleted();
+    window.location.reload();
   } catch (error) {
     console.error("Error deleting task:", error);
   }
 };
 
+const fetchTasks = async (setData) => {
+  try {
+    const tokenId = window.location.pathname.split("/")[3];
+    const res = await axios.get(`http://localhost:3000/tasks/${tokenId}`, {
+      withCredentials: true,
+    });
+
+    setData(mapTasksToLanes(res.data));
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+  }
+};
+
 function Kanban() {
+  const location = useLocation();
   const [data, setData] = useState(initialData);
+  const [formVisible, setFormVisible] = useState(false);
+  const [formMode, setFormMode] = useState("add"); // "add" or "edit"
+  const [formData, setFormData] = useState({
+    description: "",
+    user: "",
+    status: "planned",
+  });
+  const [editingTaskId, setEditingTaskId] = useState(null);
 
   useEffect(() => {
     fetchTasks(setData);
   }, []);
+
+  const handleFormToggle = () => {
+    setFormMode("add");
+    setFormData({ description: "", user: "", status: "planned" });
+    setEditingTaskId(null);
+    setFormVisible((v) => !v);
+  };
+
+  const handleFormCancel = () => {
+    setFormVisible(false);
+    setEditingTaskId(null);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((p) => ({ ...p, [name]: value }));
+  };
+
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const tokenId = window.location.pathname.split("/")[3];
+      await axios.post(
+        `http://localhost:3000/tasks/create-task`,
+        { ...formData, tokenId, user: formData.user ? [formData.user] : [] },
+        { withCredentials: true }
+      );
+      await fetchTasks();
+      window.location.reload();
+      handleFormCancel();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(
+        `http://localhost:3000/tasks/${editingTaskId}`,
+        {
+          description: formData.description,
+          user: formData.user ? [formData.user] : [],
+          status: formData.status,
+        },
+        { withCredentials: true }
+      );
+      await fetchTasks();
+      window.location.reload();
+      handleFormCancel();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEditClick = (card, laneTitle) => {
+    setFormMode("edit");
+    setFormData({
+      description: card.description,
+      user: card.user,
+      status: laneTitle.toLowerCase(),
+    });
+    setEditingTaskId(card.id);
+    setFormVisible(true);
+  };
 
   const handleDragStart = (e, card, sourceLaneId) => {
     e.dataTransfer.setData("card", JSON.stringify({ card, sourceLaneId }));
@@ -206,13 +244,10 @@ function Kanban() {
           cards: [...lane.cards, card],
         };
       }
-      // console.log(data);
       return lane;
     });
 
     setData({ lanes: updatedLanes });
-    console.log(data);
-    // updateStatusOnCardDrag();
   };
 
   const handleDragOver = (e) => {
@@ -221,7 +256,16 @@ function Kanban() {
 
   return (
     <div className="kanban-board">
-      <AddTaskCard onTaskAdded={() => fetchTasks(setData)} />
+      <AddTaskCard
+        visible={formVisible}
+        mode={formMode}
+        data={formData}
+        onToggle={handleFormToggle}
+        onChange={handleFormChange}
+        onSubmit={formMode === "add" ? handleAddSubmit : handleUpdateSubmit}
+        onCancel={handleFormCancel}
+      />
+
       {data.lanes.map((lane) => (
         <div
           key={lane.id}
@@ -238,18 +282,24 @@ function Kanban() {
                 draggable
                 onDragStart={(e) => handleDragStart(e, card, lane.id)}
               >
-                {/* <h4 className="card-title">{card.title}</h4> */}
                 <p className="card-description">{card.description}</p>
                 <p className="card-description">{card.user}</p>
                 <button
+                  className="edit-task-button"
+                  onClick={() => handleEditClick(card, lane.title)}
+                  title="Edit Task"
+                >
+                  <img src={editIcon} alt="Edit" />
+                </button>
+                <button
                   className="delete-task-button"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent drag or other parent events
-                    deleteTask(card.id, () => fetchTasks(setData));
+                    e.stopPropagation();
+                    deleteTask(card.id, fetchTasks);
                   }}
                   title="Delete Task"
                 >
-                  <img src={deleteIcon} alt="Delete Icon" />
+                  <img src={deleteIcon} alt="Delete" />
                 </button>
               </div>
             ))}
@@ -259,5 +309,11 @@ function Kanban() {
     </div>
   );
 }
-
-export { fetchTasks, deleteTask, Kanban, mapTasksToLanes, updateStatusOnCardDrag, AddTaskCard };
+export {
+  fetchTasks,
+  deleteTask,
+  mapTasksToLanes,
+  updateStatusOnCardDrag,
+  AddTaskCard,
+};
+export default Kanban;

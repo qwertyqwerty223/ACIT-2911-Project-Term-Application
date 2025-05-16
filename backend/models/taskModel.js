@@ -15,7 +15,12 @@ const TaskSchema = new mongoose.Schema({
         type: [ String ], 
         required: false,
         default: []
-    }
+    },
+    tokenId: {
+        type: String,
+        required: true,
+    },
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }
 })
 
 const Task = mongoose.model("Task", TaskSchema)

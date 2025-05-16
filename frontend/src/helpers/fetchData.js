@@ -1,3 +1,4 @@
-const baseUrl = 'http://localhost:3000'
-
-export const fetchAllFromEndPoint = (endpoint) => (`${baseUrl}/${endpoint}`)
+// export const fetchAllFromEndPoint = (endpoint) => {
+//   const baseUrl = import.meta.env?.VITE_BASE_SERVER_URL || process.env.VITE_BASE_SERVER_URL;
+//   return `${baseUrl}/${endpoint}`;
+// };    
