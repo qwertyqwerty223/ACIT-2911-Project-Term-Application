@@ -2,13 +2,13 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background-color: #f4f5f7;
+  background-color: #748CAB;
   height: 100vh;
   overflow-x: auto;
 }
 
 .kanban-lane {
-  background-color: #ffffff;
+  background-color: #F0EBD8;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1rem;
@@ -30,8 +30,8 @@
 }
 
 .kanban-card {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  background-color: #FFFFFF;
+  border: 1px solid #0D1321;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -80,4 +80,39 @@
   background: #f32121;
   box-shadow: 0 4px 16px rgba(159, 8, 8, 0.1);
   transform: scale(1.1);
+}
+
+.add-task-button {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;            
+  padding: 10px 22px;              
+  background-color: #03A9F4;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow:
+    0 2px 2px rgba(0,0,0,0.14),
+    0 1px 5px rgba(0,0,0,0.12),
+    0 3px 1px rgba(0,0,0,0.20);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.add-task-card {
+  margin: 1rem 0;
+}
+
+.add-task-form input,
+.add-task-form select {
+  width: 100%;
+  padding: 8px 12px;               
+  margin: 8px 0;                   
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9rem;
+  box-sizing: border-box;
 }
