@@ -18,11 +18,7 @@ function AddTaskCard({
   return (
     <div className="add-task-card">
       <button onClick={onToggle} className="add-task-button">
-        {visible
-          ? "Cancel"
-          : mode === "add"
-          ? "Add Task"
-          : "Edit Task"}
+        {visible ? "Cancel" : mode === "add" ? "Add Task" : "Edit Task"}
       </button>
       {visible && (
         <form onSubmit={onSubmit} className="add-task-form">
@@ -125,6 +121,18 @@ const deleteTask = async (cardID, onTaskDeleted) => {
   }
 };
 
+const fetchTasks = async (setData) => {
+  try {
+    const tokenId = window.location.pathname.split("/")[3];
+    const res = await axios.get(fetchAllFromEndPoint(`tasks/${tokenId}`), {
+      withCredentials: true,
+    });
+    setData(mapTasksToLanes(res.data));
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+  }
+};
+
 function Kanban() {
   const location = useLocation();
   const [data, setData] = useState(initialData);
@@ -138,17 +146,8 @@ function Kanban() {
   const [editingTaskId, setEditingTaskId] = useState(null);
 
   useEffect(() => {
-    fetchTasks();
+    fetchTasks(setData);
   }, []);
-
-  const fetchTasks = async () => {
-    const tokenId = window.location.pathname.split("/")[3];
-    const res = await axios.get(
-      fetchAllFromEndPoint(`tasks/${tokenId}`),
-      { withCredentials: true }
-    );
-    setData(mapTasksToLanes(res.data));
-  };
 
   const handleFormToggle = () => {
     setFormMode("add");
@@ -277,13 +276,9 @@ function Kanban() {
                 key={card.id}
                 className="kanban-card"
                 draggable
-                onDragStart={(e) =>
-                  handleDragStart(e, card, lane.id)
-                }
+                onDragStart={(e) => handleDragStart(e, card, lane.id)}
               >
-                <p className="card-description">
-                  {card.description}
-                </p>
+                <p className="card-description">{card.description}</p>
                 <p className="card-description">{card.user}</p>
                 <button
                   className="edit-task-button"

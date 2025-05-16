@@ -15,6 +15,9 @@ jest.mock("react-router-dom", () => {
     ...actual,
     // switch useNavigate with the custom "mockNavigate" jest function
     useNavigate: () => mockNavigate,
+    useLocation: () => ({
+      pathname: "/projectName/sectionName/token123"
+    })
   };
 });
 
@@ -52,10 +55,10 @@ it("Header renders links and navigates on click", () => {
   // simulates a user clicking "timeline" link or going to this link
   fireEvent.click(timeline);
   // checks if mockNavigate is called with "/" arguement upon click
-  expect(mockNavigate).toHaveBeenCalledWith("/");
+  expect(mockNavigate).toHaveBeenCalledWith("/projectName/timeline/token123");
 
   fireEvent.click(kanban);
-  expect(mockNavigate).toHaveBeenCalledWith("/kanban");
+  expect(mockNavigate).toHaveBeenCalledWith("/projectName/kanban/token123");
 
 });
 

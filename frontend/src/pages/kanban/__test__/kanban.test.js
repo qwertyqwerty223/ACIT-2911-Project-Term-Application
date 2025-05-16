@@ -12,6 +12,7 @@ import { waitFor } from "@testing-library/react"; // React testing utilities
 jest.mock("axios");
 // mock SVG asset to avoid file-loader issues
 jest.mock("../../../assets/delete-icon.svg", () => "delete-icon.svg");
+jest.mock("../../../assets/edit-icon.svg", () => "edit-icon.svg");
 
 // Test Block for fetching tasks
 describe("fetchTasks", () => {
