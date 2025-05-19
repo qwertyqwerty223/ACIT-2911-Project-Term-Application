@@ -87,7 +87,7 @@ describe("deleteTasks", () => {
     await deleteTask("1", onTaskDeleted);
 
     // test for if the correct API URL is being called
-    expect(axios.delete).toHaveBeenCalledWith("http://localhost:3000/tasks/1");
+    expect(axios.delete).toHaveBeenCalledWith("https://projecttracker-pac8.onrender.com/tasks/1");
 
     // verify that the onTaskDeleted was called
     expect(onTaskDeleted).toHaveBeenCalledTimes(1);
@@ -105,7 +105,7 @@ describe("deleteTasks", () => {
     await deleteTask("1", onTaskDeleted);
 
     // test for correct API URL calling
-    expect(axios.delete).toHaveBeenCalledWith("http://localhost:3000/tasks/1");
+    expect(axios.delete).toHaveBeenCalledWith("https://projecttracker-pac8.onrender.com/tasks/1");
 
     // verify that the onTaskDeleted in NOT called upon error
     expect(onTaskDeleted).not.toHaveBeenCalled();
@@ -178,7 +178,7 @@ describe("updateStatusOnCardDrag", () => {
 
     await updateStatusOnCardDrag(card, newStatus);
 
-    expect(axios.patch).toHaveBeenCalledWith("http://localhost:3000/tasks/1", {
+    expect(axios.patch).toHaveBeenCalledWith("https://projecttracker-pac8.onrender.com/tasks/1", {
       _id: "1",
       description: "Task no. 1",
       status: "Completed",
@@ -200,7 +200,7 @@ describe("updateStatusOnCardDrag", () => {
     await updateStatusOnCardDrag(card, newStatus);
 
     expect(axios.patch).toHaveBeenCalledWith(
-      "http://localhost:3000/tasks/1",
+      "https://projecttracker-pac8.onrender.com/tasks/1",
       expect.anything()
     );
     expect(consoleErrorSpy).toHaveBeenCalledWith("Error Sending tasks:", expect.any(Error));
