@@ -107,7 +107,7 @@ describe("deleteEvents", () => {
     await deleteEvent("1", onEventDeleted);
 
     expect(axios.delete).toHaveBeenCalledWith(
-      "http://localhost:3000/events/1"
+      "https://projecttracker-pac8.onrender.com/events/1"
     );
     expect(onEventDeleted).toHaveBeenCalledTimes(1);
   });
@@ -121,7 +121,7 @@ describe("deleteEvents", () => {
     await deleteEvent("1", onEventDeleted);
 
     expect(axios.delete).toHaveBeenCalledWith(
-      "http://localhost:3000/events/1"
+      "https://projecttracker-pac8.onrender.com/events/1"
     );
     expect(onEventDeleted).not.toHaveBeenCalled();
   });

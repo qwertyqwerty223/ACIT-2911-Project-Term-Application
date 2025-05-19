@@ -101,7 +101,7 @@ const mapTasksToLanes = (tasksFromServer) => {
 // import.meta.env.VITE_BASE_SERVER_URL}/tasks/${card.id
 const updateStatusOnCardDrag = async (card, newStatus) => {
   try {
-    await axios.patch(`http://localhost:3000/tasks/${card.id}`, {
+    await axios.patch(`https://projecttracker-pac8.onrender.com/tasks/${card.id}`, {
       _id: card.id,
       description: card.description,
       status: newStatus,
@@ -114,7 +114,7 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
 
 const deleteTask = async (cardID, onTaskDeleted) => {
   try {
-    await axios.delete(`http://localhost:3000/tasks/${cardID}`);
+    await axios.delete(`https://projecttracker-pac8.onrender.com/tasks/${cardID}`);
     if (onTaskDeleted) onTaskDeleted();
     window.location.reload();
   } catch (error) {
@@ -125,7 +125,7 @@ const deleteTask = async (cardID, onTaskDeleted) => {
 const fetchTasks = async (setData) => {
   try {
     const tokenId = window.location.pathname.split("/")[3];
-    const res = await axios.get(`http://localhost:3000/tasks/${tokenId}`, {
+    const res = await axios.get(`https://projecttracker-pac8.onrender.com/tasks/${tokenId}`, {
       withCredentials: true,
     });
 
@@ -173,7 +173,7 @@ function Kanban() {
     try {
       const tokenId = window.location.pathname.split("/")[3];
       await axios.post(
-        `http://localhost:3000/tasks/create-task`,
+        `https://projecttracker-pac8.onrender.com/tasks/create-task`,
         { ...formData, tokenId, user: formData.user ? [formData.user] : [] },
         { withCredentials: true }
       );
@@ -189,7 +189,7 @@ function Kanban() {
     e.preventDefault();
     try {
       await axios.patch(
-        `http://localhost:3000/tasks/${editingTaskId}`,
+        `https://projecttracker-pac8.onrender.com/tasks/${editingTaskId}`,
         {
           description: formData.description,
           user: formData.user ? [formData.user] : [],

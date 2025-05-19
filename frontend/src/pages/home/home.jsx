@@ -18,7 +18,7 @@ function Home() {
     e.preventDefault();
     try {
       const {data: projectList } = await axios.post(
-        'http://localhost:3000/projects/create-project',
+        'https://projecttracker-pac8.onrender.com/projects/create-project',
         { name },
         {
           withCredentials: true,
@@ -34,7 +34,7 @@ function Home() {
 
   const handleServerSession = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/projects', {
+      const res = await axios.get('https://projecttracker-pac8.onrender.com/projects', {
         withCredentials: true,
       });
       if (!res.data.length) return;
@@ -54,7 +54,7 @@ function Home() {
 
   const handleDeleteProject = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/projects/${id}`, {
+      await axios.delete(`https://projecttracker-pac8.onrender.com/projects/${id}`, {
         withCredentials: true,
       });
       setFirstPageLoad((f) => !f);

@@ -39,7 +39,7 @@ const fetchEvents = async (setTimelineEvent, location) => {
   const token = location.pathname.split('/')[3]
   try {
     // update your server endpoint, if different from localhost:3000
-    const res = await axios.get(`http://localhost:3000/events/${token}`, {
+    const res = await axios.get(`https://projecttracker-pac8.onrender.com/events/${token}`, {
       withCredentials: true
     });
     console.log(res)
@@ -55,7 +55,7 @@ const fetchEvents = async (setTimelineEvent, location) => {
 
 const deleteEvent = async (eventID, atEventDeleted) => {
   try {
-    await axios.delete(`http://localhost:3000/events/${eventID}`);
+    await axios.delete(`https://projecttracker-pac8.onrender.com/events/${eventID}`);
     atEventDeleted();
   } catch (error) {
     console.error("Error Deleting event:", error);
@@ -103,7 +103,7 @@ function TimeLine() {
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
       await axios.post(
-        'http://localhost:3000/events/create-event',
+        'https://projecttracker-pac8.onrender.com/events/create-event',
         newTimelineEvent
       );
       await fetchEvents(setTimelineEvent, location);
@@ -131,7 +131,7 @@ function TimeLine() {
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
       await axios.patch(
-        `http://localhost:3000/events/${eventID}`,
+        `https://projecttracker-pac8.onrender.com/events/${eventID}`,
         newEvent
       );
       await fetchEvents(setTimelineEvent, location);
