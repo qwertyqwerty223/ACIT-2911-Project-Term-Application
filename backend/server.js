@@ -21,7 +21,7 @@ const startServer = async () => {
       session({
         secret: "supersecretkey",
         resave: false,
-        saveUninitialized: false,
+        saveUninitialized: true,
         store: MongoStore.create({
           client: mongoose.connection.getClient(),
           collectionName: "sessions",

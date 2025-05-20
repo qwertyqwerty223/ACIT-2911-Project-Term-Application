@@ -6,7 +6,7 @@ const app = express();
 const corsOptions ={
     origin:'https://projecttracker-frontend.onrender.com', 
     credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+    optionsSuccessStatus:200
 }
 app.use(cors(corsOptions));
 
