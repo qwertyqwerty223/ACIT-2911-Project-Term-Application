@@ -177,8 +177,8 @@ function Kanban() {
         { ...formData, tokenId, user: formData.user ? [formData.user] : [] },
         { withCredentials: true }
       );
-      await fetchTasks(setData);
-      // window.location.reload();
+      await fetchTasks();
+      window.location.reload();
       handleFormCancel();
     } catch (err) {
       console.error(err);
@@ -197,8 +197,8 @@ function Kanban() {
         },
         { withCredentials: true }
       );
-      await fetchTasks(setData);
-      // window.location.reload();
+      await fetchTasks();
+      window.location.reload();
       handleFormCancel();
     } catch (err) {
       console.error(err);
