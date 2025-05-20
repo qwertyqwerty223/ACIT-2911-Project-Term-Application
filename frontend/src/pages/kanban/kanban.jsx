@@ -106,7 +106,7 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
       description: card.description,
       status: newStatus,
       user: card.user ? [card.user] : [],
-    });
+    }, {withCredentials: true});
   } catch (error) {
     console.error("Error Sending tasks:", error);
   }
@@ -114,7 +114,7 @@ const updateStatusOnCardDrag = async (card, newStatus) => {
 
 const deleteTask = async (cardID, onTaskDeleted) => {
   try {
-    await axios.delete(`https://projecttracker-pac8.onrender.com/tasks/${cardID}`);
+    await axios.delete(`https://projecttracker-pac8.onrender.com/tasks/${cardID}`, {withCredentials: true});
     if (onTaskDeleted) onTaskDeleted();
     window.location.reload();
   } catch (error) {
