@@ -104,7 +104,7 @@ function TimeLine() {
     try {
       await axios.post(
         'https://projecttracker-pac8.onrender.com/events/create-event',
-        newTimelineEvent
+        newTimelineEvent, {withCredentials: true}
       );
       await fetchEvents(setTimelineEvent, location);
     } catch (error) {
@@ -132,7 +132,7 @@ function TimeLine() {
     try {
       await axios.patch(
         `https://projecttracker-pac8.onrender.com/events/${eventID}`,
-        newEvent
+        newEvent, {withCredentials: true}
       );
       await fetchEvents(setTimelineEvent, location);
     } catch (error) {
