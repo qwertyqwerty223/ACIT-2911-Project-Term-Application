@@ -14,19 +14,24 @@ const startServer = async () => {
 
     console.log("DB is working");
 
+    
+    app.set('trust proxy', 1); // if behind proxy/load balancer (like Render)
+
     app.use(
       session({
         secret: "supersecretkey",
         resave: false,
-        saveUninitialized: true,
+        saveUninitialized: false,
         store: MongoStore.create({
           client: mongoose.connection.getClient(),
           collectionName: "sessions",
           ttl: 60 * 60 * 24 * 30, 
         }),
         cookie: {
-          secure: false,
-          maxAge: 1000 * 60 * 60 * 24 * 30, 
+          secure: true,          
+          httpOnly: true,        
+          sameSite: "none",      
+          maxAge: 1000 * 60 * 60 * 24 * 30,
         },
       })
     );
