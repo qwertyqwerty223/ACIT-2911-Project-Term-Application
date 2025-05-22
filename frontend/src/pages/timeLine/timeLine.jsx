@@ -162,7 +162,7 @@ function TimeLine() {
           <input
             type="text"
             name="description"
-            placeholder="Write a description for the event"
+            placeholder="Write a description for the event "
             value={newEvent.description}
             onChange={handleInputChange}
           />
