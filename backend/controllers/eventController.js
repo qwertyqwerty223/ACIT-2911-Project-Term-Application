@@ -43,7 +43,7 @@ const updateOneEvent = async (req, res) => {
             if(req.body.tokenId) updateObj.tokenId = req.body.tokenId
             return updateObj
         }
-    
+        console.log(req.body)
         await Event.findByIdAndUpdate(req.params.id, itemsToUpdate())
         return res.json({ "message": "Event updated successfully"})
     } catch (error) {
