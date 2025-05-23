@@ -59,7 +59,7 @@ The terminal will provide response to confirm that the backend server is running
 ```bash
     npm run dev
 ```
-2. Rund the project:
+2. Run the project:
 ```bash
     npm run dev
 ```
