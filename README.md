@@ -59,7 +59,6 @@ The terminal will provide response to confirm that the backend server is running
     npm run dev
 ```
 
-
 ### Running Tests
 Tests can be assessed (with coverage statistics) for `frontend/` and `backend/` individually by navigating to the appropriate directory and running:
 ```bash
