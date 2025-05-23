@@ -25,8 +25,7 @@ The **Project Term Assistant App** is a full-stack web application developed for
 
 ### Prerequisites
 
-- Node.js (v18 or later)
-- MongoDB (local or cloud instance)
+- Node.js (latest build)
 - Git
 
 ---
@@ -59,10 +58,7 @@ The terminal will provide response to confirm that the backend server is running
 ```bash
     npm run dev
 ```
-2. Rund the project:
-```bash
-    npm run dev
-```
+
 
 ### Running Tests
 Tests can be assesed (with coverage statistics) for `frontend/` and `backend/` individually by navigating to the appropriate directory and running:
