@@ -61,7 +61,7 @@ The terminal will provide response to confirm that the backend server is running
 
 
 ### Running Tests
-Tests can be assesed (with coverage statistics) for `frontend/` and `backend/` individually by navigating to the appropriate directory and running:
+Tests can be assessed (with coverage statistics) for `frontend/` and `backend/` individually by navigating to the appropriate directory and running:
 ```bash
     npm test --coverage
 ```
