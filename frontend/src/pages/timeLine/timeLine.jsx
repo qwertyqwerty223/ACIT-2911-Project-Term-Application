@@ -31,7 +31,6 @@ const formatEvents = (sourceEventData) => {
             }),
     }));
 
-  console.log("Formatted Event Data:", formattedData);
   return formattedData;
 };
 
@@ -42,11 +41,8 @@ const fetchEvents = async (setTimelineEvent, location) => {
     const res = await axios.get(`http://localhost:3000/events/${token}`, {
       withCredentials: true
     });
-    console.log(res)
-    // Check if res.data exists
-    // If res.data does not exist, it will return undefined . Which we do not want
+  
     const updatedEventData = formatEvents(res.data);
-    console.log(res.data);
     setTimelineEvent(updatedEventData);
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -122,14 +118,9 @@ function TimeLine() {
   };
 
   const updateEvent = async (eventID) => {
-    const updatedTimelineEvent = {
-      title: newEvent.title,
-      description: newEvent.description,
-      date: newEvent.date,
-    };
-
     // SETUP BACKEND INTEGRATION HERE FOR STORING EVENTS
     try {
+      
       await axios.patch(
         `http://localhost:3000/events/${eventID}`,
         newEvent
@@ -171,7 +162,7 @@ function TimeLine() {
           <input
             type="text"
             name="description"
-            placeholder="Write a description for the event"
+            placeholder="Write a description for the event "
             value={newEvent.description}
             onChange={handleInputChange}
           />
@@ -204,6 +195,7 @@ function TimeLine() {
               }}
               title="Delete event"
             >
+              
               <img src={deleteIcon} alt="Delete Icon" />
             </button>
             <button
